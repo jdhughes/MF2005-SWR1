@@ -34,7 +34,7 @@
 				<Tool Name="VFPreBuildEventTool"/>
 				<Tool Name="VFPostBuildEventTool"/>
 				<Tool Name="VFManifestTool" SuppressStartupBanner="true"/></Configuration>
-		<Configuration Name="Release|x64" OutputDirectory="c:\wrdapp\bin">
+		<Configuration Name="Release|x64" OutputDirectory="c:\wrdapp\bin" IntermediateDirectory="$(PlatformName)\$(ConfigurationName)\mf">
 				<Tool Name="VFFortranCompilerTool" AdditionalOptions="/traceback" SuppressStartupBanner="true" DebugInformationFormat="debugLineInfoOnly" Optimization="optimizeFull" OpenMP="OpenMPParallelCode" Traceback="true"/>
 				<Tool Name="VFLinkerTool" OutputFile="$(OutDir)\$(ProjectName)_x64.exe" LinkIncremental="linkIncrementalNo" SuppressStartupBanner="true" IgnoreDefaultLibraryNames="MSVCRT.lib" SubSystem="subSystemConsole" AdditionalDependencies="x64\Release\GMG.lib"/>
 				<Tool Name="VFResourceCompilerTool"/>
