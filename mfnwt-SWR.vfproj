@@ -4,7 +4,7 @@
 		<Platform Name="Win32"/>
 		<Platform Name="x64"/></Platforms>
 	<Configurations>
-		<Configuration Name="Debug|Win32">
+		<Configuration Name="Debug|Win32" IntermediateDirectory="$(ConfigurationName)\nwt">
 				<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true" DebugInformationFormat="debugEnabled" Optimization="optimizeDisabled" OpenMP="OpenMPParallelCode" Traceback="true" BoundsCheck="true" RuntimeLibrary="rtMultiThreadedDebug" Interfaces="true"/>
 				<Tool Name="VFLinkerTool" OutputFile="$(OutDir)\$(ProjectName)d.exe" LinkIncremental="linkIncrementalYes" SuppressStartupBanner="true" GenerateDebugInformation="true" SubSystem="subSystemConsole" HeapReserveSize="10000000" StackReserveSize="10000000"/>
 				<Tool Name="VFResourceCompilerTool"/>
@@ -14,9 +14,9 @@
 				<Tool Name="VFPreBuildEventTool"/>
 				<Tool Name="VFPostBuildEventTool"/>
 				<Tool Name="VFManifestTool" SuppressStartupBanner="true"/></Configuration>
-		<Configuration Name="Release|Win32" OutputDirectory="C:\WRDAPP\bin">
+		<Configuration Name="Release|Win32" OutputDirectory="C:\WRDAPP\bin" IntermediateDirectory="$(ConfigurationName)\nwt">
 				<Tool Name="VFFortranCompilerTool" AdditionalOptions="/traceback" SuppressStartupBanner="true" Optimization="optimizeFull" WarnUncalled="true"/>
-				<Tool Name="VFLinkerTool" LinkIncremental="linkIncrementalNo" SuppressStartupBanner="true" IgnoreDefaultLibraryNames="MSVCRT.lib" SubSystem="subSystemConsole" AdditionalDependencies="D:\Users\jdhughes\Projects\2080DBF00\Development\MF2005-SWR.1.8\Release\GMG.lib"/>
+				<Tool Name="VFLinkerTool" LinkIncremental="linkIncrementalNo" SuppressStartupBanner="true" IgnoreDefaultLibraryNames="MSVCRT.lib" SubSystem="subSystemConsole"/>
 				<Tool Name="VFResourceCompilerTool"/>
 				<Tool Name="VFMidlTool" SuppressStartupBanner="true"/>
 				<Tool Name="VFCustomBuildTool"/>
@@ -24,7 +24,7 @@
 				<Tool Name="VFPreBuildEventTool"/>
 				<Tool Name="VFPostBuildEventTool"/>
 				<Tool Name="VFManifestTool" SuppressStartupBanner="true"/></Configuration>
-		<Configuration Name="Debug|x64">
+		<Configuration Name="Debug|x64" IntermediateDirectory="$(PlatformName)\$(ConfigurationName)\nwt">
 				<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true" DebugInformationFormat="debugEnabled" Optimization="optimizeDisabled" OpenMP="OpenMPParallelCode" Traceback="true" BoundsCheck="true" RuntimeLibrary="rtMultiThreadedDebug" Interfaces="true"/>
 				<Tool Name="VFLinkerTool" OutputFile="$(OutDir)\$(ProjectName)d_x64.exe" LinkIncremental="linkIncrementalYes" SuppressStartupBanner="true" GenerateDebugInformation="true" SubSystem="subSystemConsole" HeapReserveSize="10000000" StackReserveSize="10000000"/>
 				<Tool Name="VFResourceCompilerTool"/>
@@ -49,6 +49,7 @@
 		<Filter Name="Resource Files" Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"/>
 		<Filter Name="Source Files" Filter="f90;for;f;fpp;ftn;def;odl;idl">
 		<File RelativePath=".\src_nwt\de47.f"/>
+		<File RelativePath=".\src\gsol7.f"/>
 		<File RelativePath=".\src_nwt\gwf2bas7.f"/>
 		<File RelativePath=".\src_nwt\gwf2bcf7.f"/>
 		<File RelativePath=".\src_nwt\gwf2chd7.f"/>
@@ -74,6 +75,7 @@
 		<File RelativePath=".\src_nwt\gwf2sfr7_NWT.f"/>
 		<File RelativePath=".\src_nwt\gwf2str7.f"/>
 		<File RelativePath=".\src_nwt\gwf2sub7.f"/>
+		<File RelativePath=".\src_nwt\gwf2swr7_NWT.f"/>
 		<File RelativePath=".\src_nwt\gwf2swt7.f"/>
 		<File RelativePath=".\src_nwt\gwf2upw1.f"/>
 		<File RelativePath=".\src_nwt\gwf2uzf1_NWT.f"/>

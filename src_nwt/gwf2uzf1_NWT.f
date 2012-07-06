@@ -1367,8 +1367,9 @@ C28-----RETURN.
       END SUBROUTINE GWF2UZF1RP
 C
 C--------SUBROUTINE GWF2UZF1FM
+C SWR - JDH ADDED Iunitswr
       SUBROUTINE GWF2UZF1FM(Kkper, Kkstp, Kkiter, Iunitsfr, Iunitlak, 
-     +                      Iunitcfp, Iunitnwt, Igrid)
+     +                      Iunitcfp, Iunitnwt, Iunitswr, Igrid)
 C     ******************************************************************
 C     COMPUTE UNSATURATED ZONE FLOW AND STORAGE, RECHARGE, ET, AND
 C     SURFACE LEAKAGE AND ADD OR SUBTRACT TERMS RHS AND HCOF
@@ -1392,6 +1393,7 @@ C     ARGUMENTS
 C     -----------------------------------------------------------------
       INTEGER Kkper, Iunitsfr, Iunitlak, Igrid, Kkstp, Iunitcfp, Kkiter
       INTEGER Iunitnwt
+      INTEGER Iunitswr
 C     -----------------------------------------------------------------
 C     LOCAL VARIABLES
 C     -----------------------------------------------------------------
@@ -1803,16 +1805,21 @@ C7------CALCULATE ET DEMAND LEFT FOR GROUND WATER.
       END DO
 C
 C8------ADD OVERLAND FLOW TO STREAMS, LAKES AND CONDUITS. 
+C       ADD Iunitswr - SWR - JDH
       IF ( IRUNFLG.GT.0 .AND. (Iunitsfr.GT.0.OR.
-     +     Iunitlak.GT.0.OR.Iunitcfp.GT.0) )
-     +     CALL SGWF2UZF1OLF(Iunitsfr, Iunitlak, Iunitcfp)
+     +     Iunitlak.GT.0.OR.Iunitcfp.GT.0.OR.
+     +     Iunitswr.GT.0) )
+     +     CALL SGWF2UZF1OLF(Iunitsfr, Iunitlak, Iunitcfp,
+     +                       Iunitswr, Igrid)
 
 C9------RETURN.
       RETURN
       END SUBROUTINE GWF2UZF1FM
 C
 C--------SUBROUTINE SGWF2UZF1OLF
-      SUBROUTINE SGWF2UZF1OLF(Iunitsfr, Iunitlak, Iunitcfp)
+C SWR - JDH CHANGED SUBROUTINE TO ADD OVERLAND FLOW TO SWR
+      SUBROUTINE SGWF2UZF1OLF(Iunitsfr, Iunitlak, Iunitcfp,
+     +                        Iunitswr, Igrid)
 C     ******************************************************************
 C     ASSIGN OVERLAND RUNOFF AS INFLOW TO STREAMS AND LAKES
 C     VERSION 1.0.5:  April 5, 2012
@@ -1829,6 +1836,7 @@ C     -----------------------------------------------------------------
 C     ARGUMENTS
 C     -----------------------------------------------------------------
       INTEGER Iunitsfr, Iunitlak, Iunitcfp
+      INTEGER Iunitswr, Igrid               !SWR - JDH
 C     -----------------------------------------------------------------
 C     LOCAL VARIABLES
 C     -----------------------------------------------------------------
@@ -1869,16 +1877,47 @@ C         CORRECT STREAM SEGMENT OR LAKE.
           TOTRUNOFF = TOTRUNOFF + seepout1
           IF ( seepout1.GT.0.0 ) THEN
             irun = IRUNBND(ic, ir)
-            IF ( irun.GT.0 .AND. irun.LE.NSS .AND. Iunitsfr.GT.0 ) THEN
-              SEG(26, irun) = SEG(26, irun) + seepout1
-            ELSE IF ( irun.LT.0 .AND. ABS(irun).LE.NLAKES .AND.
-     +                Iunitlak.GT.0 ) THEN
-              OVRLNDRNF(ABS(irun)) = OVRLNDRNF(ABS(irun)) + seepout1
+C-------------SFR AND SWR REACHES
+            IF ( irun.GT.0 ) THEN
+              IF ( Iunitsfr.GT.0 ) THEN
+                IF ( irun.LE.NSS ) THEN
+                  SEG(26, irun) = SEG(26, irun) + seepout1
+                END IF
+              END IF
+              IF ( Iunitswr.GT.0 ) THEN
+                CALL GWF2SWR7EX(Igrid,1,1,irun,seepout1)  !FILL QUZFLOW IN SWR SUBROUTINE
+              END IF
+C-------------LAK REACHES
+            ELSE IF ( irun.LT.0 ) THEN
+              IF ( Iunitlak.GT.0 ) THEN
+                IF ( ABS(irun).LE.NLAKES ) THEN
+                  OVRLNDRNF(ABS(irun)) = OVRLNDRNF(ABS(irun)) + seepout1
+                END IF
+              END IF
             END IF
           END IF
           SEEPOUT(ic, ir) = 0.0
         END DO
       END DO
+!C
+!C4------LOOP THROUGH IRUNBND ARRAY AND ADD SEEPOUT PLUS EXCESSPP TO
+!C         CORRECT STREAM SEGMENT OR LAKE.
+!      DO ir = 1, NROW
+!        DO ic = 1, NCOL
+!          seepout1 = SEEPOUT(ic, ir) + EXCESPP(ic, ir) + REJ_INF(ic, ir)
+!          TOTRUNOFF = TOTRUNOFF + seepout1
+!          IF ( seepout1.GT.0.0 ) THEN
+!            irun = IRUNBND(ic, ir)
+!            IF ( irun.GT.0 .AND. irun.LE.NSS .AND. Iunitsfr.GT.0 ) THEN
+!              SEG(26, irun) = SEG(26, irun) + seepout1
+!            ELSE IF ( irun.LT.0 .AND. ABS(irun).LE.NLAKES .AND.
+!     +                Iunitlak.GT.0 ) THEN
+!              OVRLNDRNF(ABS(irun)) = OVRLNDRNF(ABS(irun)) + seepout1
+!            END IF
+!          END IF
+!          SEEPOUT(ic, ir) = 0.0
+!        END DO
+!      END DO
 C
 C5------PROPORTION RUNOFF TO REACHES ON BASIS OF STREAM LENGTH.
       IF ( Iunitsfr.GT.0 ) THEN
