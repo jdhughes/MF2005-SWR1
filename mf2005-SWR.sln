@@ -12,6 +12,8 @@ Project("{6989167D-11E4-40FE-8C1A-2192A86A7E90}") = "mfnwt-SWR", "mfnwt-SWR.vfpr
 EndProject
 Project("{6989167D-11E4-40FE-8C1A-2192A86A7E90}") = "mffmp-SWR", "mffmp-SWR.vfproj", "{38FD10AA-973E-477D-B943-6A443A893CBE}"
 EndProject
+Project("{6989167D-11E4-40FE-8C1A-2192A86A7E90}") = "mf2005-SWR-SWI", "mf2005-SWR-SWI.vfproj", "{5BC0101B-0C4F-4E03-BD98-3AFED919103F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -52,6 +54,14 @@ Global
 		{38FD10AA-973E-477D-B943-6A443A893CBE}.Release|Win32.Build.0 = Release|Win32
 		{38FD10AA-973E-477D-B943-6A443A893CBE}.Release|x64.ActiveCfg = Release|x64
 		{38FD10AA-973E-477D-B943-6A443A893CBE}.Release|x64.Build.0 = Release|x64
+		{5BC0101B-0C4F-4E03-BD98-3AFED919103F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{5BC0101B-0C4F-4E03-BD98-3AFED919103F}.Debug|Win32.Build.0 = Debug|Win32
+		{5BC0101B-0C4F-4E03-BD98-3AFED919103F}.Debug|x64.ActiveCfg = Debug|x64
+		{5BC0101B-0C4F-4E03-BD98-3AFED919103F}.Debug|x64.Build.0 = Debug|x64
+		{5BC0101B-0C4F-4E03-BD98-3AFED919103F}.Release|Win32.ActiveCfg = Release|Win32
+		{5BC0101B-0C4F-4E03-BD98-3AFED919103F}.Release|Win32.Build.0 = Release|Win32
+		{5BC0101B-0C4F-4E03-BD98-3AFED919103F}.Release|x64.ActiveCfg = Release|x64
+		{5BC0101B-0C4F-4E03-BD98-3AFED919103F}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
