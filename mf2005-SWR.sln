@@ -10,6 +10,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gmg", "gmg.vcproj", "{BEBEC
 EndProject
 Project("{6989167D-11E4-40FE-8C1A-2192A86A7E90}") = "mfnwt-SWR", "mfnwt-SWR.vfproj", "{D4D0827B-2C18-49B9-B906-E5069C35983B}"
 EndProject
+Project("{6989167D-11E4-40FE-8C1A-2192A86A7E90}") = "mffmp-SWR", "mffmp-SWR.vfproj", "{38FD10AA-973E-477D-B943-6A443A893CBE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -42,6 +44,14 @@ Global
 		{D4D0827B-2C18-49B9-B906-E5069C35983B}.Release|Win32.Build.0 = Release|Win32
 		{D4D0827B-2C18-49B9-B906-E5069C35983B}.Release|x64.ActiveCfg = Release|x64
 		{D4D0827B-2C18-49B9-B906-E5069C35983B}.Release|x64.Build.0 = Release|x64
+		{38FD10AA-973E-477D-B943-6A443A893CBE}.Debug|Win32.ActiveCfg = Debug|Win32
+		{38FD10AA-973E-477D-B943-6A443A893CBE}.Debug|Win32.Build.0 = Debug|Win32
+		{38FD10AA-973E-477D-B943-6A443A893CBE}.Debug|x64.ActiveCfg = Debug|x64
+		{38FD10AA-973E-477D-B943-6A443A893CBE}.Debug|x64.Build.0 = Debug|x64
+		{38FD10AA-973E-477D-B943-6A443A893CBE}.Release|Win32.ActiveCfg = Release|Win32
+		{38FD10AA-973E-477D-B943-6A443A893CBE}.Release|Win32.Build.0 = Release|Win32
+		{38FD10AA-973E-477D-B943-6A443A893CBE}.Release|x64.ActiveCfg = Release|x64
+		{38FD10AA-973E-477D-B943-6A443A893CBE}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

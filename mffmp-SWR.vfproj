@@ -4,7 +4,7 @@
 		<Platform Name="Win32"/>
 		<Platform Name="x64"/></Platforms>
 	<Configurations>
-		<Configuration Name="Debug|Win32" IntermediateDirectory="$(ConfigurationName)\nwt">
+		<Configuration Name="Debug|Win32" IntermediateDirectory="$(ConfigurationName)\fmp">
 				<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true" DebugInformationFormat="debugEnabled" Optimization="optimizeDisabled" OpenMP="OpenMPParallelCode" Traceback="true" BoundsCheck="true" RuntimeLibrary="rtMultiThreadedDebug" Interfaces="true"/>
 				<Tool Name="VFLinkerTool" OutputFile="$(OutDir)\$(ProjectName)d.exe" LinkIncremental="linkIncrementalYes" SuppressStartupBanner="true" GenerateDebugInformation="true" SubSystem="subSystemConsole" HeapReserveSize="10000000" StackReserveSize="10000000"/>
 				<Tool Name="VFResourceCompilerTool"/>
@@ -14,7 +14,7 @@
 				<Tool Name="VFPreBuildEventTool"/>
 				<Tool Name="VFPostBuildEventTool"/>
 				<Tool Name="VFManifestTool" SuppressStartupBanner="true"/></Configuration>
-		<Configuration Name="Release|Win32" OutputDirectory="C:\WRDAPP\bin" IntermediateDirectory="$(ConfigurationName)\nwt">
+		<Configuration Name="Release|Win32" OutputDirectory="C:\WRDAPP\bin" IntermediateDirectory="$(ConfigurationName)\fmp">
 				<Tool Name="VFFortranCompilerTool" AdditionalOptions="/traceback" SuppressStartupBanner="true" Optimization="optimizeFull" WarnUncalled="true"/>
 				<Tool Name="VFLinkerTool" LinkIncremental="linkIncrementalNo" SuppressStartupBanner="true" IgnoreDefaultLibraryNames="MSVCRT.lib" SubSystem="subSystemConsole"/>
 				<Tool Name="VFResourceCompilerTool"/>
@@ -24,7 +24,7 @@
 				<Tool Name="VFPreBuildEventTool"/>
 				<Tool Name="VFPostBuildEventTool"/>
 				<Tool Name="VFManifestTool" SuppressStartupBanner="true"/></Configuration>
-		<Configuration Name="Debug|x64" IntermediateDirectory="$(PlatformName)\$(ConfigurationName)\nwt">
+		<Configuration Name="Debug|x64" IntermediateDirectory="$(PlatformName)\$(ConfigurationName)\fmp">
 				<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true" DebugInformationFormat="debugEnabled" Optimization="optimizeDisabled" OpenMP="OpenMPParallelCode" Traceback="true" BoundsCheck="true" RuntimeLibrary="rtMultiThreadedDebug" Interfaces="true"/>
 				<Tool Name="VFLinkerTool" OutputFile="$(OutDir)\$(ProjectName)d_x64.exe" LinkIncremental="linkIncrementalYes" SuppressStartupBanner="true" GenerateDebugInformation="true" SubSystem="subSystemConsole" HeapReserveSize="10000000" StackReserveSize="10000000"/>
 				<Tool Name="VFResourceCompilerTool"/>
@@ -34,7 +34,7 @@
 				<Tool Name="VFPreBuildEventTool"/>
 				<Tool Name="VFPostBuildEventTool"/>
 				<Tool Name="VFManifestTool" SuppressStartupBanner="true"/></Configuration>
-		<Configuration Name="Release|x64" OutputDirectory="c:\wrdapp\bin" IntermediateDirectory="$(PlatformName)\$(ConfigurationName)\nwt">
+		<Configuration Name="Release|x64" OutputDirectory="c:\wrdapp\bin" IntermediateDirectory="$(PlatformName)\$(ConfigurationName)\fmp">
 				<Tool Name="VFFortranCompilerTool" AdditionalOptions="/traceback" SuppressStartupBanner="true" DebugInformationFormat="debugLineInfoOnly" Optimization="optimizeFull" OpenMP="OpenMPParallelCode" Traceback="true"/>
 				<Tool Name="VFLinkerTool" OutputFile="$(OutDir)\$(ProjectName)_x64.exe" LinkIncremental="linkIncrementalNo" SuppressStartupBanner="true" IgnoreDefaultLibraryNames="MSVCRT.lib" SubSystem="subSystemConsole" AdditionalDependencies="x64\Release\GMG.lib"/>
 				<Tool Name="VFResourceCompilerTool"/>
@@ -48,60 +48,65 @@
 		<Filter Name="Header Files" Filter="fi;fd"/>
 		<Filter Name="Resource Files" Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"/>
 		<Filter Name="Source Files" Filter="f90;for;f;fpp;ftn;def;odl;idl">
-		<File RelativePath=".\src_nwt\de47.f"/>
+		<File RelativePath=".\src_fmp\de47.f"/>
+		<File RelativePath=".\src_fmp\FMP3_NWT.f"/>
 		<File RelativePath=".\src_fmp\gsol7.f"/>
-		<File RelativePath=".\src_nwt\gwf2bas7.f"/>
-		<File RelativePath=".\src_nwt\gwf2bcf7.f"/>
-		<File RelativePath=".\src_nwt\gwf2chd7.f"/>
-		<File RelativePath=".\src_nwt\gwf2drn7_NWT.f"/>
-		<File RelativePath=".\src_nwt\gwf2drt7.f"/>
-		<File RelativePath=".\src_nwt\gwf2ets7.f"/>
-		<File RelativePath=".\src_nwt\gwf2evt7.f"/>
-		<File RelativePath=".\src_nwt\gwf2fhb7.f"/>
-		<File RelativePath=".\src_nwt\gwf2gag7.f"/>
-		<File RelativePath=".\src_nwt\gwf2ghb7_NWT.f"/>
-		<File RelativePath=".\src_nwt\gwf2hfb7_NWT.f"/>
-		<File RelativePath=".\src_nwt\gwf2huf7.f"/>
-		<File RelativePath=".\src_nwt\gwf2hydmod7.f"/>
-		<File RelativePath=".\src_nwt\gwf2ibs7.f"/>
-		<File RelativePath=".\src_nwt\gwf2lak7_NWT.f"/>
-		<File RelativePath=".\src_nwt\gwf2lpf7.f"/>
-		<File RelativePath=".\src_nwt\gwf2mnw17_NWT.f"/>
-		<File RelativePath=".\src_nwt\gwf2mnw27_NWT.f"/>
-		<File RelativePath=".\src_nwt\gwf2mnw2i7.f"/>
-		<File RelativePath=".\src_nwt\gwf2rch7.f"/>
-		<File RelativePath=".\src_nwt\gwf2res7.f"/>
-		<File RelativePath=".\src_nwt\gwf2riv7_NWT.f"/>
-		<File RelativePath=".\src_nwt\gwf2sfr7_NWT.f"/>
-		<File RelativePath=".\src_nwt\gwf2str7.f"/>
-		<File RelativePath=".\src_nwt\gwf2sub7.f"/>
-		<File RelativePath=".\src_nwt\gwf2swr7_NWT.f"/>
-		<File RelativePath=".\src_nwt\gwf2swt7.f"/>
-		<File RelativePath=".\src_nwt\gwf2upw1.f"/>
-		<File RelativePath=".\src_nwt\gwf2uzf1_NWT.f"/>
-		<File RelativePath=".\src_nwt\gwf2wel7_NWT.f"/>
-		<File RelativePath=".\src_nwt\gwfsfrmodule_NWT.f"/>
-		<File RelativePath=".\src_nwt\gwfuzfmodule_NWT.f"/>
-		<File RelativePath=".\src_nwt\hufutl7.f"/>
-		<File RelativePath=".\src_nwt\lmt7_NWT.f"/>
-		<File RelativePath=".\src_nwt\mach_mod.f90"/>
-		<File RelativePath=".\src_nwt\MF_NWT.f"/>
-		<File RelativePath=".\src_nwt\mhc7.f"/>
-		<File RelativePath=".\src_nwt\modules.f90"/>
-		<File RelativePath=".\src_nwt\nogmg.f"/>
-		<File RelativePath=".\src_nwt\NWT1_gmres.f90"/>
-		<File RelativePath=".\src_nwt\NWT1_ilupc_mod.f90"/>
-		<File RelativePath=".\src_nwt\NWT1_module.f"/>
-		<File RelativePath=".\src_nwt\NWT1_solver.f"/>
-		<File RelativePath=".\src_nwt\NWT1_xmd.f"/>
-		<File RelativePath=".\src_nwt\NWT1_xmdlib.f"/>
-		<File RelativePath=".\src_nwt\obs2bas7.f"/>
-		<File RelativePath=".\src_nwt\obs2chd7.f"/>
-		<File RelativePath=".\src_nwt\obs2drn7.f"/>
-		<File RelativePath=".\src_nwt\obs2ghb7.f"/>
-		<File RelativePath=".\src_nwt\obs2riv7.f"/>
-		<File RelativePath=".\src_nwt\parutl7.f"/>
-		<File RelativePath=".\src_nwt\pcg7.f"/>
-		<File RelativePath=".\src_nwt\sip7.f"/>
-		<File RelativePath=".\src_nwt\utl7.f"/></Filter></Files>
+		<File RelativePath=".\src_fmp\gwf2bas7_NWT.f"/>
+		<File RelativePath=".\src_fmp\gwf2bcf7.f"/>
+		<File RelativePath=".\src_fmp\gwf2bfh2.f"/>
+		<File RelativePath=".\src_fmp\gwf2chd7.f"/>
+		<File RelativePath=".\src_fmp\gwf2drn7_NWT.f"/>
+		<File RelativePath=".\src_fmp\gwf2drt7.f"/>
+		<File RelativePath=".\src_fmp\gwf2ets7.f"/>
+		<File RelativePath=".\src_fmp\gwf2evt7.f"/>
+		<File RelativePath=".\src_fmp\gwf2fhb7.f"/>
+		<File RelativePath=".\src_fmp\gwf2gag7.f"/>
+		<File RelativePath=".\src_fmp\gwf2ghb7_NWT.f"/>
+		<File RelativePath=".\src_fmp\gwf2hfb7_NWT.f"/>
+		<File RelativePath=".\src_fmp\gwf2huf7.f"/>
+		<File RelativePath=".\src_fmp\gwf2hydmod7.f"/>
+		<File RelativePath=".\src_fmp\gwf2ibs7.f"/>
+		<File RelativePath=".\src_fmp\gwf2lak7_NWT.f"/>
+		<File RelativePath=".\src_fmp\gwf2lgr2.f"/>
+		<File RelativePath=".\src_fmp\gwf2lpf7.f"/>
+		<File RelativePath=".\src_fmp\gwf2mnw17_NWT.f"/>
+		<File RelativePath=".\src_fmp\gwf2mnw27_NWT.f"/>
+		<File RelativePath=".\src_fmp\gwf2mnw2i7.f"/>
+		<File RelativePath=".\src_fmp\gwf2rch7.f"/>
+		<File RelativePath=".\src_fmp\gwf2res7.f"/>
+		<File RelativePath=".\src_fmp\gwf2rip3.f"/>
+		<File RelativePath=".\src_fmp\gwf2riv7_NWT.f"/>
+		<File RelativePath=".\src_fmp\gwf2sfr7_NWTRL.f"/>
+		<File RelativePath=".\src_fmp\gwf2str7.f"/>
+		<File RelativePath=".\src_fmp\gwf2sub7L.f"/>
+		<File RelativePath=".\src_fmp\gwf2swr7_NWT_FMP.f"/>
+		<File RelativePath=".\src_fmp\gwf2swt7.f"/>
+		<File RelativePath=".\src_fmp\gwf2upw1.f"/>
+		<File RelativePath=".\src_fmp\gwf2uzf1_NWT.f"/>
+		<File RelativePath=".\src_fmp\gwf2wel7_NWT.f"/>
+		<File RelativePath=".\src_fmp\gwflgrmodule.f"/>
+		<File RelativePath=".\src_fmp\gwfsfrmodule_NWT.f"/>
+		<File RelativePath=".\src_fmp\gwfuzfmodule_NWT.f"/>
+		<File RelativePath=".\src_fmp\hufutl7.f"/>
+		<File RelativePath=".\src_fmp\lmt7_NWT.f"/>
+		<File RelativePath=".\src_fmp\mach_mod.f90"/>
+		<File RelativePath=".\src_fmp\MF_NWT_FMP_LGR2.f"/>
+		<File RelativePath=".\src_fmp\mhc7.f"/>
+		<File RelativePath=".\src_fmp\modules.f90"/>
+		<File RelativePath=".\src_fmp\nogmg.f"/>
+		<File RelativePath=".\src_fmp\NWT1_gmres.f90"/>
+		<File RelativePath=".\src_fmp\NWT1_ilupc_mod.f90"/>
+		<File RelativePath=".\src_fmp\NWT1_module.f"/>
+		<File RelativePath=".\src_fmp\NWT1_solver.f"/>
+		<File RelativePath=".\src_fmp\NWT1_xmd.f"/>
+		<File RelativePath=".\src_fmp\NWT1_xmdlib.f"/>
+		<File RelativePath=".\src_fmp\obs2bas7.f"/>
+		<File RelativePath=".\src_fmp\obs2chd7.f"/>
+		<File RelativePath=".\src_fmp\obs2drn7.f"/>
+		<File RelativePath=".\src_fmp\obs2ghb7.f"/>
+		<File RelativePath=".\src_fmp\obs2riv7.f"/>
+		<File RelativePath=".\src_fmp\parutl7.f"/>
+		<File RelativePath=".\src_fmp\pcg7.f"/>
+		<File RelativePath=".\src_fmp\sip7.f"/>
+		<File RelativePath=".\src_fmp\utl7.f"/></Filter></Files>
 	<Globals/></VisualStudioProject>

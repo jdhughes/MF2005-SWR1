@@ -1,7 +1,6 @@
 C     ******************************************************************
 C     MAIN CODE FOR U.S. GEOLOGICAL SURVEY MODULAR MODEL -- MODFLOW-NWT
-!rgn------REVISION NUMBER CHANGED TO BE CONSISTENT WITH NWT RELEASE
-!rgn------NEW VERSION NUMBER 1.0.5:  April 5, 2012
+C     WITH THE FARM PROCESS AND LGR
 C     ******************************************************************
 C
 C        SPECIFICATIONS:
@@ -15,27 +14,29 @@ C1------USE package modules.
       USE GWFLAKMODULE, ONLY:NLAKESAR,THETA,STGOLD,STGNEW,VOL
       USE GWFSFRMODULE, ONLY:NUMTAB
       USE GWFNWTMODULE, ONLY:LINMETH,ICNVGFLG,ITREAL
+      USE GWFSUBMODULE, ONLY:SUBLNK                                     !ADDED FOR SUB-LINK BY WSCHMID 07/29/10
+      USE FMPMODULE,    ONLY:IRTFL,ICUFL,IPFL,IEBFL,QBD,MCLOSE,ISTARTFL !inserted by SCHMID
       USE PCGMODULE
       USE SIPMODULE
       USE DE4MODULE
       USE GMGMODULE
-!      USE PCGN
+      USE LGRMODULE
       INCLUDE 'openspec.inc'
 C
 C-------ASSIGN VERSION NUMBER AND DATE
       CHARACTER*40 VERSION,VERSION2,VERSION3
-      CHARACTER*10 MFVNAM
+      CHARACTER*15 MFVNAM
       PARAMETER (VERSION='1.0.5 05/14/2012')
       PARAMETER (VERSION2='1.8.00 12/18/2009')
       PARAMETER (VERSION3='0.56.0 05/18/2012')
-      PARAMETER (MFVNAM='SWR-NWT')
+      PARAMETER (MFVNAM='-LGR2-FMP3-SWR1-NWT')
 C
       CHARACTER*80 HEADNG(2)
       CHARACTER*200 FNAME
       INTEGER IBDT(8)
 C
       CHARACTER*4 CUNIT(NIUNIT)
-      DATA CUNIT/'BCF6', 'WEL ', 'DRN ', 'RIV ', 'EVT ', '    ', 'GHB ',  !  7
+      DATA CUNIT/'BCF6', 'WEL ', 'DRN ', 'RIV ', 'EVT ', 'RIP ', 'GHB ',  !  7 !RIP ADDED BY SCHMID
      &           'RCH ', 'SIP ', 'DE4 ', '    ', 'OC  ', 'PCG ', 'lmg ',  ! 14
      &           'gwt ', 'FHB ', 'RES ', 'STR ', 'IBS ', 'CHD ', 'HFB6',  ! 21
      &           'LAK ', 'LPF ', 'DIS ', '    ', 'PVAL', '    ', 'HOB ',  ! 28
@@ -56,42 +57,51 @@ C2------WRITE BANNER TO SCREEN AND DEFINE CONSTANTS.
      &  /,29X,'Version ',A/,20X,'BASED ON MODFLOW-2005 Version ',A,
      &  /,20X,'SWR1 Version ',A/)
       INUNIT = 99
+      ILUNIT = 98
+      NGRIDS = 1 
+      ILGR = 0
 C
 C3------GET THE NAME OF THE NAME FILE
-      CALL GETNAMFIL(FNAME)
-      MAXUNIT= INUNIT
+      CALL GETNAMFIL(ILGR,NGRIDS,FNAME,ILUNIT)
+      DO IGRID = 1, NGRIDS
+        MAXUNIT= INUNIT
 C
-C4------OPEN NAME FILE.
-      OPEN (UNIT=INUNIT,FILE=FNAME,STATUS='OLD',ACTION=ACTION(1))
-      NC=INDEX(FNAME,' ')
-      WRITE(*,490)' Using NAME file: ',FNAME(1:NC)
-  490 FORMAT(A,A)
+C4A------IF USING LGR, READ NAMES FROM LGR NAME FILE
+        IF(ILGR .NE. 0) CALL GETNAMFILLGR(ILUNIT,FNAME,IGRID)
+C4B-----OPEN NAME FILE.
+        OPEN (UNIT=INUNIT,FILE=FNAME,STATUS='OLD',ACTION=ACTION(1))
+        NC=INDEX(FNAME,' ')
+        WRITE(*,490)' Using NAME file: ',FNAME(1:NC)
+  490   FORMAT(A,A)
 C
 C5------Get current date and time, assign to IBDT, and write to screen
-      CALL DATE_AND_TIME(VALUES=IBDT)
-      WRITE(*,2) (IBDT(I),I=1,3),(IBDT(I),I=5,7)
-    2 FORMAT(1X,'Run start date and time (yyyy/mm/dd hh:mm:ss): ',
-     &I4,'/',I2.2,'/',I2.2,1X,I2,':',I2.2,':',I2.2,/)
+        IF(IGRID .EQ. 1)THEN
+          CALL DATE_AND_TIME(VALUES=IBDT)
+          WRITE(*,2) (IBDT(I),I=1,3),(IBDT(I),I=5,7)
+    2     FORMAT(1X,'Run start date and time (yyyy/mm/dd hh:mm:ss): ',
+     &    I4,'/',I2.2,'/',I2.2,1X,I2,':',I2.2,':',I2.2,/)
+        ENDIF
 C
 C6------ALLOCATE AND READ (AR) PROCEDURE
-      IGRID=1
+ccrth      IGRID=1
       NSOL=1
       CALL GWF2BAS7AR(INUNIT,CUNIT,VERSION,24,31,32,MAXUNIT,IGRID,12,
      1                HEADNG,26,MFVNAM)
       IF(IUNIT(50).GT.0 .AND. IUNIT(52).GT.0) THEN
         WRITE(IOUT,'(1X,/,1X,A)')
-     1  'MNW1 and MNW2 cannot both be active in the same simulation'
+     1  'MNW1 and MNW2 cannot both be active in the same grid'
         CALL USTOP(' ')
       END IF
+      IF(ILGR .NE.0) CALL GWF2LGR1AR(ILUNIT,FNAME,NGRIDS,IGRID)
       IF(IUNIT(50).GT.0 .AND. IUNIT(52).GT.0) THEN
         WRITE(IOUT,'(1X,/,1X,A)')
-     1  'MNW1 and MNW2 cannot both be active in the same simulation'
+     1  'MNW1 and MNW2 cannot both be active in the same grid'
         CALL USTOP(' ')
       END IF
-      IF(IUNIT(1).GT.0) CALL GWF2BCF7AR(IUNIT(1),IGRID)
+      IF(IUNIT(1).GT.0) CALL GWF2BCF7AR(IUNIT(1),ILGR,IGRID)
       IF(IUNIT(23).GT.0) CALL GWF2LPF7AR(IUNIT(23),IGRID)
       IF(IUNIT(37).GT.0) CALL GWF2HUF7AR(IUNIT(37),IUNIT(47),
-     1                                     IUNIT(53),IGRID)
+     1                                     IUNIT(53),ILGR,IGRID)
 ! Allocate arrays for Newton Solver
       IF(IUNIT(63).GT.0) CALL GWF2NWT1AR(IUNIT(63),MXITER, 
      1                                   IUNIT(22),IGRID)
@@ -100,6 +110,7 @@ C6------ALLOCATE AND READ (AR) PROCEDURE
       IF(IUNIT(3).GT.0) CALL GWF2DRN7AR(IUNIT(3),IGRID)
       IF(IUNIT(4).GT.0) CALL GWF2RIV7AR(IUNIT(4),IGRID)
       IF(IUNIT(5).GT.0) CALL GWF2EVT7AR(IUNIT(5),IGRID)
+      If(IUNIT(6).GT.0) CALL GWF2RIP3AR(IUNIT(6),IGRID)               !inserted by schmid
       IF(IUNIT(7).GT.0) CALL GWF2GHB7AR(IUNIT(7),IGRID)
       IF(IUNIT(8).GT.0) CALL GWF2RCH7AR(IUNIT(8),IGRID)
       IF(IUNIT(16).GT.0) CALL GWF2FHB7AR(IUNIT(16),IGRID)
@@ -121,6 +132,7 @@ C6------ALLOCATE AND READ (AR) PROCEDURE
       IF(IUNIT(39).GT.0) CALL GWF2ETS7AR(IUNIT(39),IGRID)
       IF(IUNIT(40).GT.0) CALL GWF2DRT7AR(IUNIT(40),IGRID)
       IF(IUNIT(54).GT.0) CALL GWF2SUB7AR(IUNIT(54),IGRID)
+      IF(IUNIT(48).GT.0) CALL GWF2BFH2AR(IUNIT(48),ILGR,IGRID)
       IF(IUNIT(9).GT.0) CALL SIP7AR(IUNIT(9),MXITER,IGRID)
       IF(IUNIT(10).GT.0) CALL DE47AR(IUNIT(10),MXITER,IGRID)
       IF(IUNIT(13).GT.0) CALL PCG7AR(IUNIT(13),MXITER,IGRID)
@@ -144,11 +156,11 @@ C6------ALLOCATE AND READ (AR) PROCEDURE
      1                   CALL GWF2HYD7STR7AR(IUNIT(43),IGRID)
       IF(IUNIT(43).GT.0 .AND. IUNIT(44).GT.0)
      1                   CALL GWF2HYD7SFR7AR(IUNIT(43),IGRID)
-!      IF(IUNIT(61).GT.0) THEN
-!        CALL FMP2AR(
-!     1  IUNIT(61),IUNIT(44),IUNIT(52),IUNIT(55),IGRID)                  !FMP2AR CALL ADDED BY SCHMID
-!        CALL FMP2RQ(IUNIT(61),IUNIT(44),IUNIT(52),IGRID)                !FMP2RQ CALL ADDED BY SCHMID
-!      ENDIF
+      IF(IUNIT(61).GT.0) THEN
+        CALL FMP2AR(
+     1  IUNIT(61),IUNIT(44),IUNIT(52),IUNIT(55),IUNIT(63),IGRID,ILGR)                  !FMP2AR CALL ADDED BY SCHMID, added NWT iunit rth
+        CALL FMP2RQ(IUNIT(61),IUNIT(44),IUNIT(52),IUNIT(63),IGRID,ILGR)                !FMP2RQ CALL ADDED BY SCHMID, added NWT iunit rth
+      ENDIF
 C
 C  Observation allocate and read
       CALL OBS2BAS7AR(IUNIT(28),IGRID)
@@ -161,9 +173,15 @@ C  Observation allocate and read
         IF(IUNIT(21).GT.0) CALL GWF2HFB7UPW(IGRID)
       END IF
 C
+C END LOOP FOR ALLOCATING AND READING DATA FOR EACH GRID
+C      IF(ILGR.NE.0.AND.IGRID.GT.1.AND.IUNIT(62).GT.0) CALL FMP2PRTOCH()
+      ENDDO
+      CLOSE(ILUNIT)
+C
 C7------SIMULATE EACH STRESS PERIOD.
       DO 100 KPER = 1, NPER
         KKPER = KPER
+        DO IGRID = 1, NGRIDS
         IF(IUNIT(62).GT.0 ) CALL GWF2UPWUPDATE(1,Igrid)
         CALL GWF2BAS7ST(KKPER,IGRID)
         IF(IUNIT(19).GT.0) CALL GWF2IBS7ST(KKPER,IGRID)
@@ -172,10 +190,13 @@ C7------SIMULATE EACH STRESS PERIOD.
 C
 C7B-----READ AND PREPARE INFORMATION FOR STRESS PERIOD.
 C----------READ USING PACKAGE READ AND PREPARE MODULES.
+cswm: note the '1' below is hardwired for the parent grid
+        IF(ILGR .NE. 0) CALL GWF2LGR2RP(KKPER,1,IGRID)
         IF(IUNIT(2).GT.0) CALL GWF2WEL7RP(IUNIT(2),IGRID)
         IF(IUNIT(3).GT.0) CALL GWF2DRN7RP(IUNIT(3),IGRID)
         IF(IUNIT(4).GT.0) CALL GWF2RIV7RP(IUNIT(4),IGRID)
         IF(IUNIT(5).GT.0) CALL GWF2EVT7RP(IUNIT(5),IGRID)
+        If(IUNIT(6).GT.0) CALL GWF2RIP3RP(IUNIT(6),IGRID)             !inserted by schmid
         IF(IUNIT(7).GT.0) CALL GWF2GHB7RP(IUNIT(7),IGRID)
 !        IF(IUNIT(8).GT.0) CALL GWF2RCH7RP(IUNIT(8),IUNIT(44),IGRID)
         IF(IUNIT(8).GT.0) CALL GWF2RCH7RP(IUNIT(8),IGRID)
@@ -185,7 +206,7 @@ C----------READ USING PACKAGE READ AND PREPARE MODULES.
      1                     CALL GWF2HYD7STR7RP(IUNIT(43),KKPER,IGRID)
         IF(IUNIT(20).GT.0) CALL GWF2CHD7RP(IUNIT(20),IGRID)
         IF(IUNIT(44).GT.0) CALL GWF2SFR7RP(IUNIT(44),IUNIT(15),
-     1                                     IUNIT(22),KKPER,KKSTP,
+     1                                IUNIT(22),IUNIT(54),KKPER,KKSTP,
      2                                     NSOL,IOUTS,IUNIT(1),
      3                                     IUNIT(23),IUNIT(37),
      4                                     IUNIT(62), IUNIT(55), IGRID)
@@ -200,26 +221,30 @@ C----------READ USING PACKAGE READ AND PREPARE MODULES.
      1             IUNIT(22),IUNIT(55),NSOL,IGRID)
         IF(IUNIT(39).GT.0) CALL GWF2ETS7RP(IUNIT(39),IGRID)
         IF(IUNIT(40).GT.0) CALL GWF2DRT7RP(IUNIT(40),IGRID)
-        IF(IUNIT(50).GT.0) CALL GWF2MNW27RP(IUNIT(50),kper,IUNIT(9),
+        IF(IUNIT(50).GT.0) CALL GWF2MNW27RP(IUNIT(50),KKPER,IUNIT(9),
      +                       IUNIT(10),0,IUNIT(13),0,IUNIT(42),
      +                       IUNIT(15),IUNIT(63),IGRID)
         IF(IUNIT(51).GT.0.AND.KKPER.EQ.1) CALL GWF2MNW2I7RP(IUNIT(51),
      1                     0,IGRID)
         IF(IUNIT(52).GT.0) CALL GWF2MNW17RP(IUNIT(52),IUNIT(1),
      1                            IUNIT(23),IUNIT(37),IUNIT(62),KKPER,
-     2                            IGRID)
-!        IF(IUNIT(61).GT.0) CALL FMP2RP(IUNIT(61),ISTARTFL,KKPER,        !FMP2AR CALL ADDED BY SCHMID
-!     1                          IUNIT(44),IUNIT(52),IGRID)     
+     2                            IGRID)     
+        IF(IUNIT(48).GT.0) CALL GWF2BFH2RP(IUNIT(48),KKPER,IGRID)
+        IF(IUNIT(61).GT.0) CALL FMP2RP(IUNIT(61),KKPER,                 !FMP2AR CALL ADDED BY SCHMID
+     1                          IUNIT(44),IUNIT(52),IUNIT(63),IGRID,
+     2                          NGRIDS,ILGR,IOUF)    
         IF(IUNIT(64).GT.0) CALL GWF2SWR7RP(IUNIT(64),KKPER,IGRID)  !SWR - JDH
+        ENDDO 
 C
 C7C-----SIMULATE EACH TIME STEP.
         DO 90 KSTP = 1, NSTP(KPER)
           KKSTP = KSTP
-          IF ( IRESTART.EQ.1 ) THEN
-            IF ( KPER.EQ.KPERSTART .AND. KSTP.EQ.KSTPSTART ) THEN
-              CALL RESTARTHEADS(IOUT)
-            END IF
-          END IF
+          DO IGRID = 1, NGRIDS
+ccrth          IF ( IRESTART.EQ.1 ) THEN
+ccrth            IF ( KPER.EQ.KPERSTART .AND. KSTP.EQ.KSTPSTART ) THEN
+ccrth              CALL RESTARTHEADS(IOUT)
+ccrth            END IF
+ccrth          END IF
 C
 C7C1----CALCULATE TIME STEP LENGTH. SET HOLD=HNEW.
           IF(IUNIT(62).GT.0 ) CALL GWF2UPWUPDATE(1,Igrid)
@@ -228,13 +253,17 @@ C7C1----CALCULATE TIME STEP LENGTH. SET HOLD=HNEW.
           IF(IUNIT(20).GT.0) CALL GWF2CHD7AD(KKPER,IGRID)
           IF(IUNIT(1).GT.0) CALL GWF2BCF7AD(KKPER,IGRID)
           IF(IUNIT(17).GT.0) CALL GWF2RES7AD(KKSTP,KKPER,IGRID)
-          IF(IUNIT(23).GT.0) CALL GWF2LPF7AD(KKPER,IGRID)
+          IF(IUNIT(23).GT.0) CALL GWF2LPF7AD(KKPER,IUNIT(54),IGRID)
           IF(IUNIT(37).GT.0) CALL GWF2HUF7AD(KKPER,IGRID)
           IF(IUNIT(16).GT.0) CALL GWF2FHB7AD(IGRID)
           IF(IUNIT(22).GT.0) CALL GWF2LAK7AD(KKPER,KKSTP,IUNIT(15),
      1                                           IGRID)
-          IF( IUNIT(44).GT.0 .AND. NUMTAB.GT.0 ) 
-     2                             CALL GWF2SFR7AD(IUNIT(22))
+          IF(IUNIT(44).GT.0.AND.IUNIT(54).GT.0) THEN                  !ADDED FOR SUB-LINK BY WSCHMID 07/29/10 --> sfr only uses AD for Sublink
+                  IF(SUBLNK) CALL GWF2SFR7AD(KKSTP,IGRID)
+          ENDIF
+ 
+          IF( IUNIT(44).GT.0 ) 
+     2                             CALL GWF2SFR7LAKE(IUNIT(22))
           IF(IUNIT(50).GT.0) THEN
             IF (IUNIT(1).GT.0) THEN
               CALL GWF2MNW27BCF(KPER,IGRID)
@@ -257,49 +286,83 @@ C7C1----CALCULATE TIME STEP LENGTH. SET HOLD=HNEW.
           END IF
           IF(IUNIT(52).GT.0) CALL GWF2MNW17AD(IUNIT(1),IUNIT(23),
      1                                  IUNIT(37),IUNIT(62),IGRID)
-!          IF(IUNIT(61).GT.0) THEN                                       !FMP2AD CALL ADDED BY SCHMID
-!             IF(IRTFL.EQ.3.OR.ICUFL.EQ.3.OR.IPFL.EQ.3
-!     1                           .OR.IEBFL.EQ.1.OR.IEBFL.EQ.3)
-!     2       CALL FMP2AD(ISTARTFL,KKPER,IGRID)
-!          ENDIF     
+          IF(IUNIT(48).GT.0) CALL GWF2BFH2AD(IUNIT(48),IGRID)
+          IF(IUNIT(61).GT.0) THEN                                       !FMP2AD CALL ADDED BY SCHMID
+             IF(IRTFL.EQ.3.OR.ICUFL.EQ.3.OR.IPFL.EQ.3
+     1                           .OR.IEBFL.EQ.1.OR.IEBFL.EQ.3)
+     2         CALL FMP2AD(KKPER,IGRID)
+               IF(IUNIT(54).GT.0) THEN                                  !ADDED FOR SUB-LINK BY WSCHMID 07/29/10
+                 IF(SUBLNK) CALL FMP2ADSUB(KKPER,IGRID,IOUF)            !ADDED FOR SUB-LINK BY WSCHMID 07/29/10
+               ENDIF                                                    !ADDED FOR SUB-LINK BY WSCHMID 07/29/10     
+           ENDIF
           IF(IUNIT(64).GT.0) CALL GWF2SWR7AD(KKPER,IGRID,IUNIT(54))  !SWR - JDH
 C
 C---------INDICATE IN PRINTOUT THAT SOLUTION IS FOR HEADS
-          IF ( IRESTART.GT.0 ) THEN
-            IF ( KPER.LT.KPERSTART ) THEN
-              CALL UMESPR('SKIPPING STEP TO RESTART',' ',IOUT)
-              WRITE(*,26)KPER,KSTP
-            ELSE IF ( KPER.EQ.KPERSTART .AND. KSTP.LT.KSTPSTART ) THEN
-              CALL UMESPR('SKIPPING STEP TO RESTART',' ',IOUT)
-              WRITE(*,26)KPER,KSTP
-            ELSE
-              CALL UMESPR('SOLVING FOR HEAD',' ',IOUT)
-              WRITE(*,25)KPER,KSTP
-            END IF
-          ELSE
+ccrth          IF ( IRESTART.GT.0 ) THEN
+ccrth            IF ( KPER.LT.KPERSTART ) THEN
+ccrth              CALL UMESPR('SKIPPING STEP TO RESTART',' ',IOUT)
+ccrth              WRITE(*,26)KPER,KSTP
+ccrth            ELSE IF ( KPER.EQ.KPERSTART .AND. KSTP.LT.KSTPSTART ) THEN
+ccrth              CALL UMESPR('SKIPPING STEP TO RESTART',' ',IOUT)
+ccrth              WRITE(*,26)KPER,KSTP
+ccrth            ELSE
+ccrth              CALL UMESPR('SOLVING FOR HEAD',' ',IOUT)
+ccrth              WRITE(*,25)KPER,KSTP
+ccrth            END IF
+ccrth          ELSE
             CALL UMESPR('SOLVING FOR HEAD',' ',IOUT)
             WRITE(*,25)KPER,KSTP
-          END IF
+ccrth          END IF
+          ENDDO  !end of multi-grid loop
    25     FORMAT(' Solving:  Stress period: ',i5,4x,
      &       'Time step: ',i5,4x,'Groundwater-Flow Eqn.')
    26     FORMAT('Skipping:  Stress period: ',i5,4x,
      &       'Time step: ',i5)
+C          
+C---------BEGIN LOOP FOR ITERATING BETWEEN GRIDS (LGR ITERATIONS)
+          LGRCNVG = 0            
+          LGRITER = 0            
+          DO WHILE (LGRCNVG .EQ. 0)
+            LGRITER = LGRITER + 1
+
+C7C2----ITERATIVELY FORMULATE AND SOLVE THE FLOW EQUATIONS FOR EACH GRID
+            DO IGRID = 1, NGRIDS
+              CALL SGWF2BAS7PNT(IGRID)
+C-------------CHECK IF LGR IS ACTIVE
+              IF(ILGR .NE. 0)THEN
+                CALL SGWF2LGR1PNT(IGRID)
+C---------------CHECK IF PARENT OR CHILD GRID 
+                IF(ISCHILD .NE. -1)THEN
+C-----------------PUT PARENT HEAD TO CHILD GRID SHARED NODES AND RELAX
+             !use linear interp. vert refinement not finished
+cc                  CALL GWF2LGR2LINEAR(KKPER,KKSTP,LGRITER,
+cc     1                            GLOBALDAT(1)%HNEW,  
+cc     2                            GLOBALDAT(1)%NCOL,
+cc     3                            GLOBALDAT(1)%NROW,
+cc     4                            GLOBALDAT(1)%NLAY,
+cc     5                            GLOBALDAT(1)%DELR,GLOBALDAT(1)%DELC) 
+cc     6                            GLOBALDAT(1)%BOTM) 
+!swm: NOTE: the '1' in the arguement list is hardwired for the parent
+!grid
+                  CALL GWF2LGR2DARCY(KKPER,KKSTP,LGRITER,1,IGRID)
+                ENDIF          
+              ENDIF
 C
 C7C2----ITERATIVELY FORMULATE AND SOLVE THE FLOW EQUATIONS.
-!          DO 30 KITER = 1, MXITER
            KITER = 0
            ITREAL2 = 0
-           NOITER = 1
+ccrth           NOITER = 1
            IF ( IUNIT(63).GT.0 ) ITREAL = 0
-           IF ( IRESTART.GT.0 ) THEN
-             NOITER = 0
-             IF ( KPER.GT.KPERSTART ) THEN
-               NOITER = 1
-             ELSE IF ( KPER.EQ.KPERSTART .AND. KSTP.GE.KSTPSTART ) THEN
-               NOITER = 1 
-             END IF
-           END IF
-           DO WHILE (ITREAL2.LT.MXITER .AND. NOITER.EQ.1)
+ccrth           IF ( IRESTART.GT.0 ) THEN
+ccrth             NOITER = 0
+ccrth             IF ( KPER.GT.KPERSTART ) THEN
+ccrth               NOITER = 1
+ccrth             ELSE IF ( KPER.EQ.KPERSTART .AND. KSTP.GE.KSTPSTART ) THEN
+ccrth               NOITER = 1 
+ccrth             END IF
+ccrth           END IF
+ccrth           DO WHILE (ITREAL2.LT.MXITER .AND. NOITER.EQ.1)
+           DO WHILE (ITREAL2.LT.MXITER)
             KITER = KITER + 1
             KKITER = KITER
             IF ( IUNIT(63).EQ.0 ) ITREAL2 = KITER
@@ -308,11 +371,12 @@ C
 C7C2A---FORMULATE THE FINITE DIFFERENCE EQUATIONS.
             CALL GWF2BAS7FM(IGRID)
             IF(IUNIT(1).GT.0) CALL GWF2BCF7FM(KKITER,KKSTP,
-     1                               KKPER,IGRID)
+     1                               KKPER,ILGR,IGRID)
             IF(IUNIT(62).GT.0) CALL GWF2UPWFMS(KKITER,KKSTP,KKPER,IGRID)
-            IF(IUNIT(23).GT.0) CALL GWF2LPF7FM(KKITER,KKSTP,KKPER,IGRID)
+            IF(IUNIT(23).GT.0) CALL GWF2LPF7FM(KKITER,KKSTP,KKPER,ILGR,
+     1                            IGRID)
             IF(IUNIT(37).GT.0) CALL GWF2HUF7FM(KKITER,
-     1                             KKSTP,KKPER,IUNIT(47),IGRID)
+     1                             KKSTP,KKPER,IUNIT(47),ILGR,IGRID)
             IF ( IUNIT(62).EQ.0 ) THEN
               IF(IUNIT(21).GT.0) CALL GWF2HFB7FM(IGRID)
             END IF
@@ -326,6 +390,7 @@ C7C2A---FORMULATE THE FINITE DIFFERENCE EQUATIONS.
               IF(IUNIT(22).GT.0.AND.NEVTOP.EQ.3) CALL GWF2LAK7ST(
      1                                                    1,IGRID)
             END IF
+            IF(IUNIT(6).GT.0) CALL GWF2RIP3FM(IGRID)                !inserted by schmid
             IF(IUNIT(7).GT.0) CALL GWF2GHB7FM(IGRID)
             IF(IUNIT(8).GT.0) THEN
                IF(IUNIT(22).GT.0.AND.NRCHOP.EQ.3) CALL GWF2LAK7ST(
@@ -340,15 +405,16 @@ C7C2A---FORMULATE THE FINITE DIFFERENCE EQUATIONS.
             IF(IUNIT(19).GT.0) CALL GWF2IBS7FM(KKPER,IGRID)
             IF(IUNIT(39).GT.0) CALL GWF2ETS7FM(IGRID)
             IF(IUNIT(40).GT.0) CALL GWF2DRT7FM(IGRID)
-!            IF(IUNIT(61).GT.0) CALL FMP2FM(KKITER,KKPER,KKSTP,ISTARTFL, !FMP2FM CALL ADDED BY SCHMID
-!     1                              IUNIT(44),IUNIT(52),IUNIT(55),IGRID)
+            IF(IUNIT(61).GT.0) CALL FMP2FM(KKITER,KKPER,KKSTP,            !FMP2FM CALL ADDED BY SCHMID
+     1                              IUNIT(44),IUNIT(52),IUNIT(55),
+     2                              IUNIT(63),ILGR,IGRID,NGRIDS,LGRITER)
             IF(IUNIT(55).GT.0) CALL GWF2UZF1FM(KKPER,KKSTP,KKITER,
      1                           IUNIT(44),IUNIT(22),IUNIT(58),
      2                           IUNIT(63),
      3                           IUNIT(64),IGRID)  !SWR - JDH ADDED IUNIT(64)
             IF(IUNIT(44).GT.0) CALL GWF2SFR7FM(KKITER,KKPER,KKSTP,
-     1                              IUNIT(22),IUNIT(63),IUNIT(8), 
-     2                              IUNIT(55),IGRID)   !cjm (added IUNIT(8))
+     1                              IUNIT(22),IUNIT(63),ILGR,LGRITER,
+     3                                  NGRIDS,IGRID)   !cjm (added IUNIT(8))
             IF(IUNIT(22).GT.0) CALL GWF2LAK7FM(KKITER,KKPER,KKSTP,
      1                                     IUNIT(44),IUNIT(55),IGRID)
             IF(IUNIT(50).GT.0) THEN
@@ -370,8 +436,24 @@ C7C2A---FORMULATE THE FINITE DIFFERENCE EQUATIONS.
      1                                         IUNIT(9),IGRID)
             IF(IUNIT(57).GT.0) CALL GWF2SWT7FM(KKPER,IGRID)
             IF(IUNIT(64).GT.0) CALL GWF2SWR7FM(KKITER,KKPER,KKSTP,IGRID)  !SWR - JDH
+            IF(IUNIT(48).GT.0) CALL GWF2BFH2FM(KKPER,KKSTP,KKITER,
+     1                                            IGRID) 
+C-----------------ADJUST HCOF AND RHS IF LGR IS ACTIVE
+                IF(ILGR .NE. 0)THEN
+                  IF(IGRID .EQ. 1)THEN  
+                    DO LG =2,NGRIDS
+                      IF(LGRDAT(IGRID)%IBPFLG(LG) .NE. 0)
+     1                  CALL GWF2LGR2PFM(KKPER,KKSTP,KKITER,LGRITER,
+     2                     IUNIT(1),IUNIT(23),IUNIT(37),LG) 
+                    ENDDO
+                  ELSEIF(ISCHILD .GE. 0)THEN    
+                    CALL GWF2LGR2CFM(KKITER,LGRITER,IUNIT(1),
+     1                     IUNIT(23),IUNIT(37),IGRID)
+                  ENDIF
+                ENDIF
 C
 C7C2B---MAKE ONE CUT AT AN APPROXIMATE SOLUTION.
+                IERR=0
             IF (IUNIT(9).GT.0) THEN
                    CALL SIP7PNT(IGRID)
                    CALL SIP7AP(HNEW,IBOUND,CR,CC,CV,HCOF,RHS,EL,FL,GL,
@@ -407,33 +489,84 @@ C7C2B---MAKE ONE CUT AT AN APPROXIMATE SOLUTION.
      5                         IUNITMHC,DUP,DLOW,CHGLIMIT,
      6                         BIGHEADCHG,HNEWLAST)
             ENDIF
-!            IF (IUNIT(59).GT.0) THEN
-!              CALL PCGN2AP(HNEW,RHS,CR,CC,CV,HCOF,IBOUND,
-!     1              KKITER,KKSTP,KKPER,ICNVG,HNOFLO,IGRID)
-!            ENDIF
 ! Calculate new heads using Newton solver
           IF(IUNIT(63).GT.0 ) 
      1          CALL GWF2NWT1FM(KKITER,ICNVG,KSTP,KPER,Mxiter,
      2                          IUNIT(22),IGRID)
           IF ( IUNIT(63).GT.0 )ITREAL2 = ITREAL
+                IF(IERR.EQ.1) CALL USTOP(' ')
 C
+C-WSCHMID-INSERT (06/18/2009)
+C-------ALLOW CONVERGENCE CRITERIA FOR MNW WELL PUMPAGE LINKED TO FARM PROCESS
+C       (will be active in next version once net MNW rates are computed at the end of FMP-routine)
+C             IF (IUNIT(62).GT.0.AND.
+C     1        IUNIT(52).GT.0.AND.ICNVG.EQ.1) THEN !.AND.MCLOSE.EQ.1)THEN
+C              CALL SFMP2PNT(IGRID) 
+C              CALL FMP2QCNVG(IUNIT(52),IUNIT(13),IUNIT(9),              !FMP2QCNVG CALL ADDED BY SCHMID / WSCHMID-03/23/11 - MNW1 changed unit#
+C     1                       IUNIT(10),IUNIT(42),IUNIT(63))
+C             ENDIF
+C-WSCHMID-END OF INSERT
+C
+C-WSCHMID-MODIFIED (07/21/08)
 C-------ENSURE CONVERGENCE OF SWR - BASEFLOW CHANGES LESS THAN TOLF - JDH
             IF(IUNIT(64).GT.0) THEN
               CALL GWF2SWR7CV(KKITER,IGRID,ICNVG,MXITER)
             END IF
-C
-C7C2C---IF CONVERGENCE CRITERION HAS BEEN MET STOP ITERATING.
-            IF (ICNVG.EQ.1) GOTO 33
-!  30      CONTINUE
-          END DO
+C7C2C---IF CONVERGENCE CRITERION HAS BEEN MET STOP ITERATING.           
+              IF(ICNVG.EQ.1) THEN
+                IF(IUNIT(61).EQ.0) THEN
+                  GOTO 33
+                ENDIF
+                IF(IUNIT(61).GT.0) THEN                                 
+                  IF(ISTARTFL.GT.0) THEN                                !ALLOW ONE INITIAL ITERATION (AT ISTARTFL=0) PRIOR TO FMP-FM
+                    GOTO 33                                             !AND ONLY SOLVE AFTER THAT ITERATION ONCE CONVERGENCE IS MET.
+                  ENDIF
+                ENDIF
+              ENDIF
+C-WSCHMID-END OF MODIFICATION
+          ENDDO
           KITER = MXITER
 C
    33     CONTINUE
-          IF ( NOITER.EQ.1 ) THEN
+ccrth          IF ( NOITER.EQ.1 ) THEN
           IF(IUNIT(62).GT.0 ) CALL GWF2UPWUPDATE(2,Igrid)
 C
-C7C3----DETERMINE WHICH OUTPUT IS NEEDED.
-          CALL GWF2BAS7OC(KKSTP,KKPER,ICNVG,IUNIT(12),IGRID)
+C
+C-------------PREPARE THE NEXT GRID FOR LGR ITERATION
+              IF(ILGR.NE.0)THEN 
+                IF(ISCHILD .EQ. -1)THEN
+                  DO LG =2,NGRIDS
+                    CALL GWF2LGR1INITP(KKPER,KKSTP,LGRITER,
+     1                      LGRDAT(LG)%NPCBEG,LGRDAT(LG)%NPRBEG,
+     2                      LGRDAT(LG)%NPLBEG,LGRDAT(LG)%NPCEND,
+     3                      LGRDAT(LG)%NPREND,LGRDAT(LG)%NPLEND,
+     4                      LGRDAT(LG)%IBOTFLG,LGRDAT(LG)%ISHFLG,
+     5                      LGRDAT(LG)%MXLGRITER,LG,IGRID) 
+                  ENDDO
+                ELSEIF(IGRID.NE.1)THEN
+C-----------------CALCULATE FLUX ENTERING THE CHILD INTERFACE 
+                  CALL GWF2LGR2FMBF(KKPER,KKSTP,LGRITER)
+                ENDIF
+              ENDIF
+C-----------END GRID LOOP
+            ENDDO 
+C-----------CHECK CONVEGENCE OF LGR IF LGR IS ACTIVE
+            IF(ILGR .EQ. 0)THEN
+              LGRCNVG = 1
+            ELSE
+              CALL GWF2LGR2CNVG(IGRID,NGRIDS,LGRCNVG,LGRITER,KKPER,
+     1                          KKSTP)
+            ENDIF
+C---------END LGR ITERATION LOOP
+          ENDDO       
+C
+C7C3----DETERMINE WHICH OUTPUT IS NEEDED FOR EACH GRID
+          DO IGRID = 1, NGRIDS
+            CALL GWF2BAS7OC(KKSTP,KKPER,ICNVG,
+     1                      GLOBALDAT(IGRID)%IUNIT(12),IGRID)
+
+C---------SWAP POINTERS FOR LGR DATA   !swm: needed for SFR
+            IF(ILGR.NE.0) CALL SGWF2LGR1PNT(IGRID)
 C
 C7C4----CALCULATE BUDGET TERMS. SAVE CELL-BY-CELL FLOW TERMS.
           MSUM = 1
@@ -504,6 +637,7 @@ C7C4----CALCULATE BUDGET TERMS. SAVE CELL-BY-CELL FLOW TERMS.
           IF(IUNIT(5).GT.0) THEN
              IF(IUNIT(22).GT.0.AND.NEVTOP.EQ.3) CALL GWF2LAK7ST(
      1                                                     0,IGRID)
+          IF(IUNIT(6).GT.0) CALL GWF2RIP3BD(KKSTP,KKPER,IGRID)        !inserted by schmid
              CALL GWF2EVT7BD(KKSTP,KKPER,IGRID)
              IF(IUNIT(22).GT.0.AND.NEVTOP.EQ.3) CALL GWF2LAK7ST(
      1                                                     1,IGRID)
@@ -522,11 +656,11 @@ C7C4----CALCULATE BUDGET TERMS. SAVE CELL-BY-CELL FLOW TERMS.
           IF(IUNIT(18).GT.0) CALL GWF2STR7BD(KKSTP,KKPER,IGRID)
           IF(IUNIT(19).GT.0) CALL GWF2IBS7BD(KKSTP,KKPER,IGRID)
           IF(IUNIT(39).GT.0) CALL GWF2ETS7BD(KKSTP,KKPER,IGRID)
-          IF(IUNIT(40).GT.0) CALL GWF2DRT7BD(KKSTP,KKPER,IGRID)  
+          IF(IUNIT(40).GT.0) CALL GWF2DRT7BD(KKSTP,KKPER,IGRID)
 ! (CJM) Added RCH unit number for RCH->SFR.
           IF(IUNIT(44).GT.0) CALL GWF2SFR7BD(KKSTP,KKPER,IUNIT(15),
-     1                        IUNIT(22),IUNIT(46),IUNIT(55),NSOL,
-     2                        IUNIT(8),IGRID)
+     1                        IUNIT(22),IUNIT(46),IUNIT(55),NSOL,ILGR,
+     2                         LGRITER,NGRIDS,IGRID)
 ! Moved call to UZF1BD to follow SFR7BD for printing net recharge in UZF.
           IF(IUNIT(55).GT.0) CALL GWF2UZF1BD(KKSTP,KKPER,IUNIT(22),
      1                             IUNIT(44),IGRID)
@@ -537,8 +671,34 @@ C7C4----CALCULATE BUDGET TERMS. SAVE CELL-BY-CELL FLOW TERMS.
           IF(IUNIT(52).GT.0) CALL GWF2MNW17BD(NSTP(KPER),KKSTP,KKPER,
      1                      IGRID)
           IF(IUNIT(54).GT.0) CALL GWF2SUB7BD(KKSTP,KKPER,IGRID)
-          IF(IUNIT(57).GT.0) CALL GWF2SWT7BD(KKSTP,KKPER,IGRID)     
+          IF(IUNIT(57).GT.0) CALL GWF2SWT7BD(KKSTP,KKPER,IGRID)
           IF(IUNIT(64).GT.0) CALL GWF2SWR7BD(KKSTP,KKPER,IGRID)  !SWR - JDH
+C--FARM DEMAND AND SUPPLY, FARM WELLS, AND FARM NET-RECHARGE
+c	 ...fmp2fm is inserted to allow recalculating FMP-flowrates, which 
+c         may de a function of SFR & MNW flowrates: Q-fmp(h,Q-sfr,Q-mnw).
+          IF (IUNIT(61).GT.0) THEN                                      !FMP2FM CALL ADDED BY SCHMID
+             IF(QBD.EQ.1)                              
+     1         CALL FMP2FM(KKITER,KKPER,KKSTP,IUNIT(44),
+     2                    IUNIT(52),IUNIT(55),IUNIT(63),ILGR,
+     3                    IGRID,NGRIDS,LGRITER)         !added inuit for NWT by rth
+C      ...ALLOW CONVERGENCE CRITERIA FOR MNW WELL PUMPAGE LINKED TO FARM PROCESS
+             IF(IUNIT(52).GT.0.AND.MCLOSE.EQ.1) THEN
+               CALL SFMP2PNT(IGRID)
+               CALL FMP2QCNVG(IUNIT(52),IUNIT(13),IUNIT(9),             !FMP2QCNVG CALL ADDED BY SCHMID, added inuit for NWT by rth
+     1                        IUNIT(10),IUNIT(42),IUNIT(63))            !added inuit for NWT by rth        
+             ENDIF
+             CALL FMP2WELBD(KKSTP,KKPER,IUNIT(52),IUNIT(55),
+     1                        IUNIT(63),IGRID)                                  !FMP2WELBD & FMP2FNRBD CALLS ADDED BY SCHMID, added inuit for NWT by rth
+             CALL FMP2FNRBD(KKSTP,KKPER,IGRID)
+            ENDIF    
+            IF(IUNIT(48).GT.0) CALL GWF2BFH2BD(KKSTP,KKPER,IUNIT(1),
+     1                         IUNIT(23),IUNIT(37),IGRID)
+            IF(ILGR .NE.0)THEN 
+              IF(ISCHILD .LE. 0) CALL GWF2LGR2PBD(KKSTP,KKPER,
+     1                           IUNIT(1),IUNIT(23),IUNIT(37),NGRIDS)
+              IF(ISCHILD .GT. 0) CALL GWF2LGR2CBD(KKSTP,KKPER,
+     1                           IUNIT(1),IUNIT(23),IUNIT(37))
+            ENDIF      
 CLMT
 CLMT----CALL LINK-MT3DMS SUBROUTINES TO SAVE FLOW-TRANSPORT LINK FILE
 CLMT----FOR USE BY MT3DMS FOR TRANSPORT SIMULATION
@@ -572,13 +732,22 @@ C7C5---PRINT AND/OR SAVE DATA.
           IF(IUNIT(37).GT.0)THEN
             IF(IOHUFHDS .NE.0 .OR.IOHUFFLWS .NE.0)
      1         CALL GWF2HUF7OT(KKSTP,KKPER,ICNVG,1,IGRID)
-          ENDIF
+            ENDIF      
           IF(IUNIT(51).NE.0) CALL GWF2MNW2I7OT(NSTP(KKPER),KKSTP,
      1                       KKPER,IGRID)
           IF(IUNIT(54).GT.0) CALL GWF2SUB7OT(KKSTP,KKPER,IUNIT(54),
      1                                       IGRID)
           IF(IUNIT(57).GT.0) CALL GWF2SWT7OT(KKSTP,KKPER,IGRID)
           IF(IUNIT(43).GT.0) CALL GWF2HYD7BAS7OT(KKSTP,KKPER,IGRID)
+c-wschmid-03/32/11
+c            IF(ILGR .NE.0 .AND. ISCHILD.GE.0) CALL GWF2LGR2COT(KKSTP,
+c     1                                        KKPER,IGRID)
+            IF(ILGR .NE.0) THEN
+              IF(ISCHILD.GE.0) CALL GWF2LGR2COT(KKSTP,KKPER,IGRID)
+            ENDIF 
+C     1                                            
+C------CHECK FOR CHANGES IN HEAD AND FLUX BOUNDARY CONDITIONS 
+            IF(IUNIT(48).GT.0) CALL GWF2BFH2OT(KKSTP,KKPER,IGRID)
 C
 C7C6---JUMP TO END OF PROGRAM IF CONVERGENCE WAS NOT ACHIEVED.
           IF ( IUNIT(63).GT.0 ) THEN
@@ -588,18 +757,23 @@ C7C6---JUMP TO END OF PROGRAM IF CONVERGENCE WAS NOT ACHIEVED.
           ELSE
             IF(ICNVG.EQ.0) GO TO 110
           END IF
-          END IF
+ccrth          END IF
+C---------END GRID OT GRID LOOP
+      ENDDO
 C
 C-----END OF TIME STEP (KSTP) AND STRESS PERIOD (KPER) LOOPS
    90   CONTINUE
   100 CONTINUE
 C
 C
-      IF(IUNIT(52).NE.0) CALL GWF2MNW17OT(IGRID)
 C
 C8------END OF SIMULATION
+  110 DO IGRID = 1, NGRIDS
+        CALL SGWF2BAS7PNT(IGRID)
+        IF(IUNIT(52).NE.0 .AND. ICNVG.NE.0)
+     1     CALL GWF2MNW17OT(IGRID)
 C-------SAVE RESTART RECORDS FOR SUB PACKAGE
-  110 IF(IUNIT(54).GT.0) CALL GWF2SUB7SV(IGRID)
+      IF(IUNIT(54).GT.0) CALL GWF2SUB7SV(IGRID)
 C
 C  Observation output
       IF(IUNIT(28).GT.0) CALL OBS2BAS7OT(IUNIT(28),IGRID)
@@ -607,19 +781,24 @@ C  Observation output
       IF(IUNIT(34).GT.0) CALL OBS2RIV7OT(IGRID)
       IF(IUNIT(35).GT.0) CALL OBS2GHB7OT(IGRID)
       IF(IUNIT(38).GT.0) CALL OBS2CHD7OT(IGRID)
-      CALL GLO1BAS6ET(IOUT,IBDT,1)
 C
 C-------OUTPUT RESULTS OF SWR TIMER
       IF(IUNIT(64).GT.0) CALL GWF2SWR7OT(IGRID)
+
+      ENDDO
+      CALL GLO1BAS6ET(IOUT,IBDT,1)
 C
+      DO IGRID = 1, NGRIDS
 C9------CLOSE FILES AND DEALLOCATE MEMORY.  GWF2BAS7DA MUST BE CALLED
 C9------LAST BECAUSE IT DEALLOCATES IUNIT.
       CALL SGWF2BAS7PNT(IGRID)
+      IF(ILGR.NE.0) CALL GWF2LGR1DA(IGRID)
       IF(IUNIT(1).GT.0) CALL GWF2BCF7DA(IGRID)
       IF(IUNIT(2).GT.0) CALL GWF2WEL7DA(IGRID)
       IF(IUNIT(3).GT.0) CALL GWF2DRN7DA(IGRID)
       IF(IUNIT(4).GT.0) CALL GWF2RIV7DA(IGRID)
       IF(IUNIT(5).GT.0) CALL GWF2EVT7DA(IGRID)
+      IF(IUNIT(6).GT.0) CALL GWF2RIP3DA(IGRID)                        !inserted by schmid
       IF(IUNIT(7).GT.0) CALL GWF2GHB7DA(IGRID)
       IF(IUNIT(8).GT.0) CALL GWF2RCH7DA(IGRID)
       IF(IUNIT(9).GT.0) CALL SIP7DA(IGRID)
@@ -666,8 +845,10 @@ C9------LAST BECAUSE IT DEALLOCATES IUNIT.
       IF(IUNIT(35).GT.0) CALL OBS2GHB7DA(IGRID)
       IF(IUNIT(38).GT.0) CALL OBS2CHD7DA(IGRID)
       IF(IUNIT(43).GT.0) CALL GWF2HYD7DA(IGRID)
-!      IF(IUNIT(61).GT.0) CALL FMP2DA(IGRID)
-      CALL GWF2BAS7DA(IGRID)
+      IF(IUNIT(61).GT.0) CALL FMP2DA(IGRID)
+      IF(IUNIT(49).GT.0) CALL SLMT7DA(IGRID)
+        CALL GWF2BAS7DA(IGRID)
+      ENDDO
 C
 C10-----END OF PROGRAM.
       IF(ICNVG.EQ.0) THEN
@@ -678,7 +859,7 @@ C10-----END OF PROGRAM.
       CALL USTOP(' ')
 C
       END
-      SUBROUTINE GETNAMFIL(FNAME)
+      SUBROUTINE GETNAMFIL(ILGR,NGRIDS,FNAME,ILUNIT)
 C     ******************************************************************
 C     GET THE NAME OF THE NAME FILE
 C     ******************************************************************
@@ -686,8 +867,9 @@ C        SPECIFICATIONS:
 C
 C     ------------------------------------------------------------------
       CHARACTER*(*) FNAME
-      CHARACTER*200 COMLIN
+      CHARACTER*200 COMLIN,LINE
       LOGICAL EXISTS
+      INCLUDE 'openspec.inc'
 C     ------------------------------------------------------------------
 C
 C Get name file from command line or user interaction.
@@ -708,7 +890,8 @@ C        CALL GETCL(COMLIN)
         IF(COMLIN.NE.' ') THEN
           FNAME=COMLIN
         ELSE
-   15     WRITE (*,*) ' Enter the name of the NAME FILE: '
+   15   WRITE (*,*) ' Enter the name of the NAME FILE or LGR CONTROL ',
+     &              'FILE:'
           READ (*,'(A)') FNAME
           CALL URWORD(FNAME,ICOL,ISTART,ISTOP,0,N,R,0,0)
           FNAME=FNAME(ISTART:ISTOP)
@@ -725,6 +908,23 @@ C        CALL GETCL(COMLIN)
             CALL USTOP(' ')
           ENDIF
         ENDIF
+C1A-----CHECK FOR LGR KEYWORD.  IF AN LGR SIMULATION, THEN READ THE 
+C1A-----NUMBER OF GRIDS AND LEAVE FILE OPEN FOR PARSING.
+C1A-----IF NOT LGR, THEN CLOSE FILE AND CONTINUE AS NORMAL.
+      OPEN(UNIT=ILUNIT,FILE=FNAME,STATUS='OLD',ACTION=ACTION(1))
+      CALL URDCOM(ILUNIT,0,LINE)
+      ICOL=1
+      CALL URWORD(LINE,ICOL,ISTART,ISTOP,1,N,R,0,ILUNIT)
+      IF(LINE(ISTART:ISTOP) .EQ. 'LGR') THEN
+        ILGR = 1
+        WRITE(*,*) ' RUNNING MODFLOW WITH LGR '
+        CALL URDCOM(ILUNIT,0,LINE)
+        ICOL=1
+        CALL URWORD(LINE,ICOL,ISTART,ISTOP,2,NGRIDS,R,0,ILUNIT)
+        WRITE(*,*) 'NGRIDS = ', NGRIDS 
+      ELSE
+        CLOSE(ILUNIT)
+      ENDIF
 C
       RETURN
       END
