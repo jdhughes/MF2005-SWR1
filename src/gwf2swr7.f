@@ -9143,7 +9143,7 @@ C-------SUBROUTINE TO OUTPUT SUMMARY REACH STAGE DATA TO ISWRPSTG
         USE GLOBAL,       ONLY: ISSFLG
         USE GWFSWRMODULE, ONLY: IZERO, RZERO, DZERO, DONE,
      2                          ISWRSAVG, RTPRN, NPMAX, NREACHES, REACH,
-     3                          ISWRPSTG, ISWRPQAQ, ISWRPSTR,  
+     3                          ISWRPSTG, ISWRPQAQ, ISWRSRIV, ISWRPSTR,
      4                          NUMTIME, SWRHEADER, SWRDT, 
      5                          ISWRDT, SWRTIME, RSTAGE, RSTAGEP
         IMPLICIT NONE
@@ -9211,7 +9211,8 @@ C---------WRITE REACH STAGE DATA FOR EACH SWR TIMESTEP
 C           RESET PRINT DATA FOR REACH AFTER PRINTING IF 
 C           DATA IS BEING AVERAGED
           IF ( ISWRSAVG.NE.0 ) THEN
-            IF ( ISWRPQAQ.EQ.0 .AND. ISWRPSTR.EQ.0 ) THEN
+            IF ( ISWRPQAQ.EQ.0 .AND. ISWRSRIV.EQ.0 .AND. 
+     2           ISWRPSTR.EQ.0 ) THEN
               DO i = 1, NREACHES
                 RSTAGEP(i,ip) = DZERO
               END DO
@@ -9432,9 +9433,7 @@ C               RESET PRINT DATA FOR REACH AFTER PRINTING IF
 C               DATA IS BEING AVERAGED
               IF ( ISWRSAVG.NE.0 ) THEN
                 IF ( ISWRPSTR.EQ.0 ) THEN
-                  DO i = 1, NREACHES
-                    RSTAGEP(i,ip) = DZERO
-                  END DO
+                  RSTAGEP(irch,ip) = DZERO
                 END IF
                 REACH(irch)%QAQRSLTS(ip,kl)%WETTEDPERIMETER = DZERO
                 REACH(irch)%QAQRSLTS(ip,kl)%CONDUCTANCE     = DZERO
