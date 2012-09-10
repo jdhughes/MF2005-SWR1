@@ -1,0 +1,17 @@
+LIST           7 Results\SWRSample05.lst
+BAS6           1 SWRSample05.bas
+DIS           29 SWRSample05.dis
+LPF           11 SWRSample05.lpf
+OC            22 SWRSample05.oc
+PCG           19 SWRSample05.pcg
+#GMG           19 SWRSample05.gmg
+UZF           18 SWRSample05.UZF
+GHB           16 SWRSample05.ghb
+SWR           61 SWRSample05.swr
+DATA         201 ref\ConstantStage.dat
+DATA         102 Results\SWRSample05_Stage.csv
+DATA(BINARY) 101 Results\SWRSample05_GroupFlow.flow
+DATA(BINARY) 103 Results\SWRSample05_QAQ.bin
+DATA(BINARY) 111 Results\SWRSample05.hds
+DATA         301 Results\SWRSample05.riv
+DATA         302 Results\SWRSample05.cnv
