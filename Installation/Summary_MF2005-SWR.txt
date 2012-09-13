@@ -1,0 +1,74 @@
+SUMMARY OF MODFLOW-2005 with the SWR1 Process
+
+
+NOTE: Any use of trade, product, or firm names is for descriptive purposes only
+      and does not imply endorsement by the U.S. Government.
+
+
+ABSTRACT 
+
+     MODFLOW-2005 with the SWR1 Process is a version of MODFLOW-2005 (v 1.9) with
+the SWR1 Process added to the boundary conditions that can be applied to the 
+groundwater flow equation solved by MODFLOW-2005. The SWR1 Process uses a flexible
+approach for simulating one- and two-dimensional routing of surface-water flow and
+is implicitly coupled to the groundwater flow process in MODFLOW. Surface-water 
+routing in SWR1 can be simulated using a diffusive-wave approximation of the 
+vertically-integrated Saint-Venant equations and/or a simplified level-pool 
+approach.  SWR1 can account for surface-water flow controlled by backwater 
+conditions caused by small water-surface gradients or surface-water control 
+structures.  A number of typical surface-water control structures can be represented, 
+and it is possible to implement simple operational rules to manage surface-water 
+stages and streamflow. The non-linear surface-water flow equations implemented in 
+the SWR1 Process are solved using Newton methods and direct or iterative solvers.
+The SWR1 Process for MODFLOW-2005 is described in the documentation report by 
+Hughes and others (2012).
+
+HISTORY
+
+      SWR1 Process Version 1.0 09/10/2012 - Initial release. Also see the file
+        ‘SWR1Process_release.txt’ for additional release notes.
+
+      SWR1 Process Version 1.01.0 09/10/2012 - Also see the file
+        ‘SWR1Process_release.txt’ for additional release notes.
+
+SYSTEM REQUIREMENTS
+
+     MODFLOW-2005 and the SWR1 Process are written in Fortran 90 programming language. 
+     The code has been used on personal computers running various forms of the Microsoft
+     Windows operating system.
+
+
+FUNTIONALITY
+
+     MODFLOW-2005 with the SWR1 Process can be run in three modes: (1) a surface-
+     water only mode using an active SWR1 Process and an inactive groundwater
+     flow process; (2) groundwater only mode (standard MODFLOW-2005); and (3)
+     coupled surface-water and groundwater mode using the SWR1 Process and
+     MODFLOW-2005. All standard MODFLOW-2005 packages are supported in this
+     version of MODFLOW-2005. See Harbaugh (2005) for details on supported
+     packages. 
+                                    
+DOCUMENTATION
+
+Hughes, J.D., Langevin, C.D., Chartier, K.L., and White, J.T., 2012, 
+Documentation of the Surface-Water Routing (SWR1) Process for modeling 
+surface-water flow with the U.S. Geological Survey Modular Ground-Water
+Model (MODFLOW–2005): U.S. Geological Survey Techniques and Methods, 
+book 6, chap. A40 (Version 1.0), 113 p.
+
+
+REFERENCE
+
+Harbaugh, A.W., 2005, MODFLOW-2005, the U.S. Geological Survey modular
+ground-water model--the Ground-Water Flow Process: U.S. Geological Survey
+Techniques and Methods 6-A16, variously paginated.
+
+
+CONTACT
+
+    Joseph D. Hughes
+    Florida Water Science Center
+    4446 Pet Lane
+    Suite 108
+    Lutz, FL 33559
+    jdhughes@usgs.gov 

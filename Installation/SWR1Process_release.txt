@@ -1,0 +1,49 @@
+release.txt
+
+
+                           SWR1 Process Release Notes
+
+
+This file describes changes introduced into the SWR1 Process with each 
+official release; these changes may substantially affect users.
+
+
+NOTE: Any use of trade, product or firm names is for descriptive purposes
+only and does not imply endorsement by the U.S. Government.
+
+
+o Version 1.0 09/10/2012:
+
+This version is the initial release.
+
+o Version 1.01.0 09/12/2012:
+
+The SWR1 Process was modified to allow incorporation of SWR1 derivative terms 
+into the groundwater flow equation solved by MODFLOW-NWT. The SWR1 Process 
+was also modified to allow downstream discharge from a SFR2 reach to be routed 
+to a SWR1 reach using an additional SWR1 surface-water control structure. The 
+SWR1 Process was also modified to allow surface-water control structures 
+discharging from the SWR1 network to discharge to SFR2 reaches.
+
+
+Reference:
+
+Hughes, J.D., Langevin, C.D., Chartier, K.L., and White, J.T., 2012, 
+Documentation of the Surface-Water Routing (SWR1) Process for modeling 
+surface-water flow with the U.S. Geological Survey Modular Ground-Water
+Model (MODFLOW–2005): U.S. Geological Survey Techniques and Methods, 
+book 6, chap. A40 (Version 1.0), 113 p.
+
+
+Contact:
+
+    Joseph D. Hughes
+    Florida Water Science Center
+    4446 Pet Lane
+    Suite 108
+    Lutz, FL 33559
+    jdhughes@usgs.gov 
+
+
+
+
