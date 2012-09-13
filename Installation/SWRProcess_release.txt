@@ -1,10 +1,10 @@
 release.txt
 
 
-                           SWR1 Process Release Notes
+                           SWR Process Release Notes
 
 
-This file describes changes introduced into the SWR1 Process with each 
+This file describes changes introduced into the SWR Process with each 
 official release; these changes may substantially affect users.
 
 
@@ -18,11 +18,11 @@ This version is the initial release.
 
 o Version 1.01.0 09/12/2012:
 
-The SWR1 Process was modified to allow incorporation of SWR1 derivative terms 
-into the groundwater flow equation solved by MODFLOW-NWT. The SWR1 Process 
+The SWR Process was modified to allow incorporation of SWR derivative terms 
+into the groundwater flow equation solved by MODFLOW-NWT. The SWR Process 
 was also modified to allow downstream discharge from a SFR2 reach to be routed 
-to a SWR1 reach using an additional SWR1 surface-water control structure. The 
-SWR1 Process was also modified to allow surface-water control structures 
+to a SWR reach using an additional SWR surface-water control structure. The 
+SWR Process was also modified to allow surface-water control structures 
 discharging from the SWR1 network to discharge to SFR2 reaches.
 
 
