@@ -25,7 +25,7 @@
 				<Tool Name="VFPostBuildEventTool"/>
 				<Tool Name="VFManifestTool" SuppressStartupBanner="true"/></Configuration>
 		<Configuration Name="Debug|x64" IntermediateDirectory="$(PlatformName)\$(ConfigurationName)\nwt">
-				<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true" DebugInformationFormat="debugEnabled" Optimization="optimizeDisabled" OpenMP="OpenMPParallelCode" Traceback="true" BoundsCheck="true" RuntimeLibrary="rtMultiThreadedDebug" Interfaces="true"/>
+				<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true" DebugInformationFormat="debugEnabled" Optimization="optimizeDisabled" OpenMP="OpenMPParallelCode" FloatingPointExceptionHandling="fpe0" Traceback="true" BoundsCheck="true" RuntimeLibrary="rtMultiThreadedDebug" Interfaces="true"/>
 				<Tool Name="VFLinkerTool" OutputFile="$(OutDir)\$(ProjectName)d_x64.exe" LinkIncremental="linkIncrementalYes" SuppressStartupBanner="true" GenerateDebugInformation="true" SubSystem="subSystemConsole" HeapReserveSize="10000000" StackReserveSize="10000000"/>
 				<Tool Name="VFResourceCompilerTool"/>
 				<Tool Name="VFMidlTool" SuppressStartupBanner="true" TargetEnvironment="midlTargetAMD64"/>
@@ -35,7 +35,7 @@
 				<Tool Name="VFPostBuildEventTool"/>
 				<Tool Name="VFManifestTool" SuppressStartupBanner="true"/></Configuration>
 		<Configuration Name="Release|x64" OutputDirectory="c:\wrdapp\bin" IntermediateDirectory="$(PlatformName)\$(ConfigurationName)\nwt">
-				<Tool Name="VFFortranCompilerTool" AdditionalOptions="/traceback" SuppressStartupBanner="true" DebugInformationFormat="debugLineInfoOnly" Optimization="optimizeFull" OpenMP="OpenMPParallelCode" Traceback="true"/>
+				<Tool Name="VFFortranCompilerTool" AdditionalOptions="/traceback" SuppressStartupBanner="true" DebugInformationFormat="debugLineInfoOnly" Optimization="optimizeFull" InlineFunctionExpansion="expandDisable" FloatingPointExceptionHandling="fpe0" Traceback="true"/>
 				<Tool Name="VFLinkerTool" OutputFile="$(OutDir)\$(ProjectName)_x64.exe" LinkIncremental="linkIncrementalNo" SuppressStartupBanner="true" IgnoreDefaultLibraryNames="MSVCRT.lib" SubSystem="subSystemConsole" AdditionalDependencies="x64\Release\GMG.lib"/>
 				<Tool Name="VFResourceCompilerTool"/>
 				<Tool Name="VFMidlTool" SuppressStartupBanner="true" TargetEnvironment="midlTargetAMD64"/>
@@ -80,7 +80,9 @@
 		<File RelativePath=".\src_nwt\gwf2upw1.f"/>
 		<File RelativePath=".\src_nwt\gwf2uzf1_NWT.f"/>
 		<File RelativePath=".\src_nwt\gwf2wel7_NWT.f"/>
+		<File RelativePath=".\src_nwt\gwf2xxx7.f"/>
 		<File RelativePath=".\src_nwt\gwfsfrmodule_NWT.f"/>
+		<File RelativePath=".\src_nwt\gwfswi7_NWT.f"/>
 		<File RelativePath=".\src_nwt\gwfuzfmodule_NWT.f"/>
 		<File RelativePath=".\src_nwt\hufutl7.f"/>
 		<File RelativePath=".\src_nwt\lmt7_NWT.f"/>

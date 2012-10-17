@@ -1,5 +1,4 @@
 python SWRSample01.py
-python SWRSample02.02.py
 python SWRSample02.py
 python SWRSample03.py
 python SWRSample04.py

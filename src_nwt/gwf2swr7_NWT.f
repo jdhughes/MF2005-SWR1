@@ -1301,29 +1301,33 @@ C-------DETERMINE NTMAX
       totim  = RZERO
       RTOTIM = RZERO
       ierr   = 0
-      DO n = 1, NPER
-        RTOTIM  = RTOTIM + PERLEN(n)
-        rt = PERLEN(n) / REAL( NSTP(n), 4 )
-        DO i = 1, NSTP(n)
-          IF ( TSMULT(n).NE.RONE ) THEN
-            IF ( i.GT.1 ) THEN
-              rt = rt * TSMULT(n)
-            ELSE
-              rt = PERLEN(n) * ( RONE - TSMULT(n) ) /
-     2            ( RONE - TSMULT(n)**NSTP(n) )
+      IF ( RTMIN.GT.RZERO ) THEN
+        DO n = 1, NPER
+          RTOTIM  = RTOTIM + PERLEN(n)
+          rt = PERLEN(n) / REAL( NSTP(n), 4 )
+          DO i = 1, NSTP(n)
+            IF ( TSMULT(n).NE.RONE ) THEN
+              IF ( i.GT.1 ) THEN
+                rt = rt * TSMULT(n)
+              ELSE
+                rt = PERLEN(n) * ( RONE - TSMULT(n) ) /
+     2              ( RONE - TSMULT(n)**NSTP(n) )
+              END IF
+            END  IF
+            IF ( RTMAX.GT.rt ) THEN
+              ierr = 1
+              WRITE (IOUT,'(1X,2(A,1X,I10,1X),2(A,1X,G10.3,1X),A)')
+     2          'MODFLOW STRESS PERIOD', n,
+     3          'TIME STEP', i, 
+     4          ': RTMAX (', RTMAX, ') EXCEEDS DELT (', rt, ')'
             END IF
-          END  IF
-          IF ( RTMAX.GT.rt ) THEN
-            ierr = 1
-            WRITE (IOUT,'(1X,2(A,1X,I10,1X),2(A,1X,G10.3,1X),A)')
-     2        'MODFLOW STRESS PERIOD', n,
-     3        'TIME STEP', i, 
-     4        ': RTMAX (', RTMAX, ') EXCEEDS DELT (', rt, ')'
-          END IF
-          totim = totim + rt
-          NTMAX = MAX( NTMAX, CEILING( rt / RTMIN ) + 1 )
+            totim = totim + rt
+            NTMAX = MAX( NTMAX, CEILING( rt / RTMIN ) + 1 )
+          END DO
         END DO
-      END DO
+      ELSE
+        NTMAX = 1
+      END IF
       NTMAX    = NTMAX
       NUMTIME  = NTMAX
       NADPCNT  = 1
@@ -3816,6 +3820,12 @@ C-------START SWR TIMER FOR GWF2SWR7FM
       CALL SSWRTIMER(0,tim1,tim2,SWREXETOT)
 C
       KMFITER = Kkiter
+C
+C-------SET RTMAX AND RTIME TO DELT IF RTMIN EQUALS RZERO
+      IF ( RTMIN.EQ.RZERO ) THEN
+        RTMAX = DELT
+        RTIME = RTMAX
+      END IF
 C
 C-------SCALE TIME BASED ON RAINFALL
 C       THIS IS A PREEMPTIVE STRIKE TO ADJUST THE TIMESTEP BASED ON RAINFALL INTENSITY 

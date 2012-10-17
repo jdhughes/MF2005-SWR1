@@ -1,6 +1,6 @@
 
 
-                      MF2005-SWR - Version: 1.0.0
+                      MF2005-SWR - Version: 1.01.0
                   MODFLOW-2005 with the SWR1 Process
 
 
@@ -61,11 +61,13 @@ will be created in the installation directory:
 
    |
    |--MF2005-SWR_1.9
-   |    |--bin           ; Compiled MF2005-SWR executables for personal computers
-   |    |--data          ; Sample problems
-   |    |--doc           ; Documentation report for MF2005-SWR
-   |    |--output_test   ; Output files from running the sample problems
-   |    |--src           ; Source code for MF2005-SWR
+   |    |--bin              ; Compiled MF2005-SWR executables for personal computers
+   |    |--data             ; Sample problems
+   |    |--doc              ; Documentation report for MF2005-SWR
+   |    |--output_test      ; Output files from running the sample problems
+   |    |--output_test_x64  ; Output files from running the sample problems with
+   |                          64-bit executable
+   |    |--src              ; Source code for MF2005-SWR
 
 Included in directory MF2005-SWR_1.9\doc is the SWR1 Process documentation 
 report, which is a Portable Document Format (PDF) file. The PDF file is 

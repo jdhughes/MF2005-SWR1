@@ -6,7 +6,6 @@ cd SWRSample01\
 rem ***Sample 02
 cd ..\SWRSample02\
 ..\..\bin\mf2005-swr.exe SWRSample02.nam
-..\..\bin\mf2005-swr.exe SWRSample02.02.nam
 
 rem ***Sample 03
 cd ..\SWRSample03\

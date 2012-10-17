@@ -1792,7 +1792,7 @@
 
            1          2          3          4          5          6          7          8          9         10         11
  .........................................................................................................................
-   1    236.       236.       236.       236.       236.       236.       236.       236.       236.       236.       236.    
+   1    23.6       23.6       23.6       23.6       23.6       23.6       23.6       23.6       23.6       23.6       23.6    
    2    0.00       0.00       0.00       0.00       0.00       0.00       0.00       0.00       0.00       0.00       0.00    
    3    0.00       0.00       0.00       0.00       0.00       0.00       0.00       0.00       0.00       0.00       0.00    
    4    0.00       0.00       0.00       0.00       0.00       0.00       0.00       0.00       0.00       0.00       0.00    
@@ -1938,7 +1938,7 @@
 
    GEO ITEM    IGEONUM   IGEOTYPE    IGCNDOP    NGEOPTS   GMANNING     GWIDTH     GBELEV    GSSLOPE   CONDUCT.   LEAKANCE     GCNDLN    GETEXTD
  ----------------------------------------------------------------------------------------------------------------------------------------------
-          1          1          5          0          1  0.300E-01                                    0.00                             0.00    
+          1          1          5          0          1  0.300                                        0.00                             0.00    
 
 
  REACH RATING CURVE DATA FOR STRESS PERIOD
@@ -8650,26 +8650,21 @@ IU           508
  -----------------------------------------------------------
  
  SOLVING FOR HEAD 
- OUTER ITER.:     2 BACKTRACK ITERS.:     8 INIT. L2NORM:  0.454E+04 FIN. L2NORM:  0.443E+04 FIN. ALPHA:  0.345E-01 UPDATE PERFORMED
- OUTER ITER.:     4 BACKTRACK ITERS.:     6 INIT. L2NORM:  0.310E+04 FIN. L2NORM:  0.310E+04 FIN. ALPHA:   1.00     UPDATE PERFORMED
- OUTER ITER.:     6 BACKTRACK ITERS.:    10 INIT. L2NORM:  0.177E+04 FIN. L2NORM:  0.165E+04 FIN. ALPHA:  0.193     UPDATE PERFORMED
- OUTER ITER.:     8 BACKTRACK ITERS.:     8 INIT. L2NORM:   745.     FIN. L2NORM:   745.     FIN. ALPHA:  0.761     UPDATE PERFORMED
- OUTER ITER.:    10 BACKTRACK ITERS.:     6 INIT. L2NORM:   364.     FIN. L2NORM:   364.     FIN. ALPHA:   1.00     UPDATE PERFORMED
- OUTER ITER.:    12 BACKTRACK ITERS.:     6 INIT. L2NORM:   171.     FIN. L2NORM:   171.     FIN. ALPHA:   1.00     UPDATE PERFORMED
- OUTER ITER.:    14 BACKTRACK ITERS.:     6 INIT. L2NORM:   79.3     FIN. L2NORM:   79.3     FIN. ALPHA:   1.00     UPDATE PERFORMED
- OUTER ITER.:    16 BACKTRACK ITERS.:     6 INIT. L2NORM:   36.5     FIN. L2NORM:   36.5     FIN. ALPHA:   1.00     UPDATE PERFORMED
- OUTER ITER.:    18 BACKTRACK ITERS.:     6 INIT. L2NORM:   16.8     FIN. L2NORM:   16.8     FIN. ALPHA:   1.00     UPDATE PERFORMED
- OUTER ITER.:    20 BACKTRACK ITERS.:     6 INIT. L2NORM:   7.73     FIN. L2NORM:   7.73     FIN. ALPHA:   1.00     UPDATE PERFORMED
- OUTER ITER.:    22 BACKTRACK ITERS.:     6 INIT. L2NORM:   3.56     FIN. L2NORM:   3.56     FIN. ALPHA:   1.00     UPDATE PERFORMED
- OUTER ITER.:    24 BACKTRACK ITERS.:     6 INIT. L2NORM:   1.64     FIN. L2NORM:   1.64     FIN. ALPHA:   1.00     UPDATE PERFORMED
- OUTER ITER.:    26 BACKTRACK ITERS.:     6 INIT. L2NORM:  0.758     FIN. L2NORM:  0.758     FIN. ALPHA:   1.00     UPDATE PERFORMED
- OUTER ITER.:    28 BACKTRACK ITERS.:     6 INIT. L2NORM:  0.350     FIN. L2NORM:  0.350     FIN. ALPHA:   1.00     UPDATE PERFORMED
- OUTER ITER.:    30 BACKTRACK ITERS.:     6 INIT. L2NORM:  0.162     FIN. L2NORM:  0.162     FIN. ALPHA:   1.00     UPDATE PERFORMED
- OUTER ITER.:    32 BACKTRACK ITERS.:     6 INIT. L2NORM:  0.753E-01 FIN. L2NORM:  0.753E-01 FIN. ALPHA:   1.00     UPDATE PERFORMED
- OUTER ITER.:    34 BACKTRACK ITERS.:     6 INIT. L2NORM:  0.350E-01 FIN. L2NORM:  0.350E-01 FIN. ALPHA:   1.00     UPDATE PERFORMED
- OUTER ITER.:    36 BACKTRACK ITERS.:     6 INIT. L2NORM:  0.163E-01 FIN. L2NORM:  0.163E-01 FIN. ALPHA:   1.00     UPDATE PERFORMED
- OUTER ITER.:    38 BACKTRACK ITERS.:     6 INIT. L2NORM:  0.759E-02 FIN. L2NORM:  0.759E-02 FIN. ALPHA:   1.00     UPDATE PERFORMED
- OUTER ITER.:    40 BACKTRACK ITERS.:     6 INIT. L2NORM:  0.354E-02 FIN. L2NORM:  0.354E-02 FIN. ALPHA:   1.00     UPDATE PERFORMED
+ OUTER ITER.:     2 BACKTRACK ITERS.:     8 INIT. L2NORM:   227.     FIN. L2NORM:   227.     FIN. ALPHA:  0.345E-01 UPDATE PERFORMED
+ OUTER ITER.:     4 BACKTRACK ITERS.:     6 INIT. L2NORM:   136.     FIN. L2NORM:   136.     FIN. ALPHA:   1.00     UPDATE PERFORMED
+ OUTER ITER.:     6 BACKTRACK ITERS.:     8 INIT. L2NORM:   90.4     FIN. L2NORM:   89.3     FIN. ALPHA:  0.345E-01 UPDATE PERFORMED
+ OUTER ITER.:     8 BACKTRACK ITERS.:     8 INIT. L2NORM:   46.6     FIN. L2NORM:   46.6     FIN. ALPHA:  0.345E-01 UPDATE PERFORMED
+ OUTER ITER.:    10 BACKTRACK ITERS.:     8 INIT. L2NORM:   20.2     FIN. L2NORM:   20.2     FIN. ALPHA:  0.345E-01 UPDATE PERFORMED
+ OUTER ITER.:    12 BACKTRACK ITERS.:     6 INIT. L2NORM:   8.25     FIN. L2NORM:   8.25     FIN. ALPHA:   1.00     UPDATE PERFORMED
+ OUTER ITER.:    14 BACKTRACK ITERS.:     6 INIT. L2NORM:   3.35     FIN. L2NORM:   3.35     FIN. ALPHA:   1.00     UPDATE PERFORMED
+ OUTER ITER.:    16 BACKTRACK ITERS.:     6 INIT. L2NORM:   1.38     FIN. L2NORM:   1.38     FIN. ALPHA:   1.00     UPDATE PERFORMED
+ OUTER ITER.:    18 BACKTRACK ITERS.:     6 INIT. L2NORM:  0.574     FIN. L2NORM:  0.574     FIN. ALPHA:   1.00     UPDATE PERFORMED
+ OUTER ITER.:    20 BACKTRACK ITERS.:     6 INIT. L2NORM:  0.242     FIN. L2NORM:  0.242     FIN. ALPHA:   1.00     UPDATE PERFORMED
+ OUTER ITER.:    22 BACKTRACK ITERS.:     6 INIT. L2NORM:  0.103     FIN. L2NORM:  0.103     FIN. ALPHA:   1.00     UPDATE PERFORMED
+ OUTER ITER.:    24 BACKTRACK ITERS.:     6 INIT. L2NORM:  0.440E-01 FIN. L2NORM:  0.440E-01 FIN. ALPHA:   1.00     UPDATE PERFORMED
+ OUTER ITER.:    26 BACKTRACK ITERS.:     6 INIT. L2NORM:  0.190E-01 FIN. L2NORM:  0.190E-01 FIN. ALPHA:   1.00     UPDATE PERFORMED
+ OUTER ITER.:    28 BACKTRACK ITERS.:     6 INIT. L2NORM:  0.823E-02 FIN. L2NORM:  0.823E-02 FIN. ALPHA:   1.00     UPDATE PERFORMED
+ OUTER ITER.:    30 BACKTRACK ITERS.:     6 INIT. L2NORM:  0.358E-02 FIN. L2NORM:  0.358E-02 FIN. ALPHA:   1.00     UPDATE PERFORMED
  INITIAL HNEW IS AN EXACT SOLUTION.
 
  OUTPUT CONTROL FOR STRESS PERIOD    1   TIME STEP    1
@@ -8683,12 +8678,14 @@ IU           508
  -------------------------------------------------------------------------------
  
  SOLVING FOR HEAD 
- OUTER ITER.:     2 BACKTRACK ITERS.:     6 INIT. L2NORM:   365.     FIN. L2NORM:   365.     FIN. ALPHA:   1.00     UPDATE PERFORMED
- OUTER ITER.:     7 BACKTRACK ITERS.:     6 INIT. L2NORM:   24.4     FIN. L2NORM:   24.4     FIN. ALPHA:   1.00     UPDATE PERFORMED
- OUTER ITER.:     9 BACKTRACK ITERS.:     6 INIT. L2NORM:   9.96     FIN. L2NORM:   9.96     FIN. ALPHA:   1.00     UPDATE PERFORMED
- OUTER ITER.:    11 BACKTRACK ITERS.:     6 INIT. L2NORM:   4.03     FIN. L2NORM:   4.03     FIN. ALPHA:   1.00     UPDATE PERFORMED
- OUTER ITER.:    13 BACKTRACK ITERS.:     6 INIT. L2NORM:   1.63     FIN. L2NORM:   1.63     FIN. ALPHA:   1.00     UPDATE PERFORMED
- OUTER ITER.:    15 BACKTRACK ITERS.:     6 INIT. L2NORM:  0.660     FIN. L2NORM:  0.660     FIN. ALPHA:   1.00     UPDATE PERFORMED
+ OUTER ITER.:     2 BACKTRACK ITERS.:     6 INIT. L2NORM:   47.1     FIN. L2NORM:   47.1     FIN. ALPHA:   1.00     UPDATE PERFORMED
+ OUTER ITER.:     4 BACKTRACK ITERS.:     6 INIT. L2NORM:   8.37     FIN. L2NORM:   8.37     FIN. ALPHA:   1.00     UPDATE PERFORMED
+ OUTER ITER.:     6 BACKTRACK ITERS.:     6 INIT. L2NORM:   1.79     FIN. L2NORM:   1.79     FIN. ALPHA:   1.00     UPDATE PERFORMED
+ OUTER ITER.:     8 BACKTRACK ITERS.:     6 INIT. L2NORM:  0.429     FIN. L2NORM:  0.429     FIN. ALPHA:   1.00     UPDATE PERFORMED
+ OUTER ITER.:    10 BACKTRACK ITERS.:     6 INIT. L2NORM:  0.113     FIN. L2NORM:  0.113     FIN. ALPHA:   1.00     UPDATE PERFORMED
+ OUTER ITER.:    12 BACKTRACK ITERS.:     6 INIT. L2NORM:  0.316E-01 FIN. L2NORM:  0.316E-01 FIN. ALPHA:   1.00     UPDATE PERFORMED
+ OUTER ITER.:    14 BACKTRACK ITERS.:     6 INIT. L2NORM:  0.933E-02 FIN. L2NORM:  0.933E-02 FIN. ALPHA:   1.00     UPDATE PERFORMED
+ OUTER ITER.:    16 BACKTRACK ITERS.:     6 INIT. L2NORM:  0.285E-02 FIN. L2NORM:  0.285E-02 FIN. ALPHA:   1.00     UPDATE PERFORMED
  INITIAL HNEW IS AN EXACT SOLUTION.
 
  NO OUTPUT CONTROL FOR STRESS PERIOD    1   TIME STEP    2
@@ -8701,10 +8698,10 @@ IU           508
  -------------------------------------------------------------------------------
  
  SOLVING FOR HEAD 
- OUTER ITER.:     2 BACKTRACK ITERS.:     6 INIT. L2NORM:   187.     FIN. L2NORM:   187.     FIN. ALPHA:   1.00     UPDATE PERFORMED
- OUTER ITER.:     7 BACKTRACK ITERS.:     6 INIT. L2NORM:   12.9     FIN. L2NORM:   12.9     FIN. ALPHA:   1.00     UPDATE PERFORMED
- OUTER ITER.:     9 BACKTRACK ITERS.:     6 INIT. L2NORM:   4.86     FIN. L2NORM:   4.86     FIN. ALPHA:   1.00     UPDATE PERFORMED
- OUTER ITER.:    11 BACKTRACK ITERS.:     6 INIT. L2NORM:   1.84     FIN. L2NORM:   1.84     FIN. ALPHA:   1.00     UPDATE PERFORMED
+ OUTER ITER.:     2 BACKTRACK ITERS.:     6 INIT. L2NORM:   29.1     FIN. L2NORM:   29.1     FIN. ALPHA:   1.00     UPDATE PERFORMED
+ OUTER ITER.:     4 BACKTRACK ITERS.:     6 INIT. L2NORM:   4.37     FIN. L2NORM:   4.37     FIN. ALPHA:   1.00     UPDATE PERFORMED
+ OUTER ITER.:     6 BACKTRACK ITERS.:     6 INIT. L2NORM:  0.819     FIN. L2NORM:  0.819     FIN. ALPHA:   1.00     UPDATE PERFORMED
+ OUTER ITER.:     8 BACKTRACK ITERS.:     6 INIT. L2NORM:  0.175     FIN. L2NORM:  0.175     FIN. ALPHA:   1.00     UPDATE PERFORMED
  INITIAL HNEW IS AN EXACT SOLUTION.
 
  NO OUTPUT CONTROL FOR STRESS PERIOD    1   TIME STEP    3
@@ -8717,9 +8714,9 @@ IU           508
  -------------------------------------------------------------------------------
  
  SOLVING FOR HEAD 
- OUTER ITER.:     5 BACKTRACK ITERS.:     6 INIT. L2NORM:   21.7     FIN. L2NORM:   21.7     FIN. ALPHA:   1.00     UPDATE PERFORMED
- OUTER ITER.:     7 BACKTRACK ITERS.:     6 INIT. L2NORM:   7.83     FIN. L2NORM:   7.83     FIN. ALPHA:   1.00     UPDATE PERFORMED
- OUTER ITER.:     9 BACKTRACK ITERS.:     6 INIT. L2NORM:   2.82     FIN. L2NORM:   2.82     FIN. ALPHA:   1.00     UPDATE PERFORMED
+ OUTER ITER.:     2 BACKTRACK ITERS.:     6 INIT. L2NORM:   21.1     FIN. L2NORM:   21.1     FIN. ALPHA:   1.00     UPDATE PERFORMED
+ OUTER ITER.:     4 BACKTRACK ITERS.:     6 INIT. L2NORM:   2.79     FIN. L2NORM:   2.79     FIN. ALPHA:   1.00     UPDATE PERFORMED
+ OUTER ITER.:     6 BACKTRACK ITERS.:     6 INIT. L2NORM:  0.473     FIN. L2NORM:  0.473     FIN. ALPHA:   1.00     UPDATE PERFORMED
  INITIAL HNEW IS AN EXACT SOLUTION.
 
  NO OUTPUT CONTROL FOR STRESS PERIOD    1   TIME STEP    4
@@ -8732,8 +8729,8 @@ IU           508
  -------------------------------------------------------------------------------
  
  SOLVING FOR HEAD 
- OUTER ITER.:     5 BACKTRACK ITERS.:     6 INIT. L2NORM:   15.2     FIN. L2NORM:   15.2     FIN. ALPHA:   1.00     UPDATE PERFORMED
- OUTER ITER.:     7 BACKTRACK ITERS.:     6 INIT. L2NORM:   5.24     FIN. L2NORM:   5.24     FIN. ALPHA:   1.00     UPDATE PERFORMED
+ OUTER ITER.:     2 BACKTRACK ITERS.:     6 INIT. L2NORM:   16.4     FIN. L2NORM:   16.4     FIN. ALPHA:   1.00     UPDATE PERFORMED
+ OUTER ITER.:     4 BACKTRACK ITERS.:     6 INIT. L2NORM:   1.96     FIN. L2NORM:   1.96     FIN. ALPHA:   1.00     UPDATE PERFORMED
  INITIAL HNEW IS AN EXACT SOLUTION.
 
  NO OUTPUT CONTROL FOR STRESS PERIOD    1   TIME STEP    5
@@ -8746,8 +8743,8 @@ IU           508
  -------------------------------------------------------------------------------
  
  SOLVING FOR HEAD 
- OUTER ITER.:     5 BACKTRACK ITERS.:     6 INIT. L2NORM:   11.2     FIN. L2NORM:   11.2     FIN. ALPHA:   1.00     UPDATE PERFORMED
- OUTER ITER.:     7 BACKTRACK ITERS.:     6 INIT. L2NORM:   3.75     FIN. L2NORM:   3.75     FIN. ALPHA:   1.00     UPDATE PERFORMED
+ OUTER ITER.:     2 BACKTRACK ITERS.:     6 INIT. L2NORM:   13.3     FIN. L2NORM:   13.3     FIN. ALPHA:   1.00     UPDATE PERFORMED
+ OUTER ITER.:     4 BACKTRACK ITERS.:     6 INIT. L2NORM:   1.46     FIN. L2NORM:   1.46     FIN. ALPHA:   1.00     UPDATE PERFORMED
  INITIAL HNEW IS AN EXACT SOLUTION.
 
  NO OUTPUT CONTROL FOR STRESS PERIOD    1   TIME STEP    6
@@ -8760,8 +8757,8 @@ IU           508
  -------------------------------------------------------------------------------
  
  SOLVING FOR HEAD 
- OUTER ITER.:     5 BACKTRACK ITERS.:     6 INIT. L2NORM:   8.59     FIN. L2NORM:   8.59     FIN. ALPHA:   1.00     UPDATE PERFORMED
- OUTER ITER.:     7 BACKTRACK ITERS.:     6 INIT. L2NORM:   2.82     FIN. L2NORM:   2.82     FIN. ALPHA:   1.00     UPDATE PERFORMED
+ OUTER ITER.:     2 BACKTRACK ITERS.:     6 INIT. L2NORM:   11.1     FIN. L2NORM:   11.1     FIN. ALPHA:   1.00     UPDATE PERFORMED
+ OUTER ITER.:     4 BACKTRACK ITERS.:     6 INIT. L2NORM:   1.14     FIN. L2NORM:   1.14     FIN. ALPHA:   1.00     UPDATE PERFORMED
  INITIAL HNEW IS AN EXACT SOLUTION.
 
  NO OUTPUT CONTROL FOR STRESS PERIOD    1   TIME STEP    7
@@ -8774,8 +8771,7 @@ IU           508
  -------------------------------------------------------------------------------
  
  SOLVING FOR HEAD 
- OUTER ITER.:     5 BACKTRACK ITERS.:     6 INIT. L2NORM:   6.80     FIN. L2NORM:   6.80     FIN. ALPHA:   1.00     UPDATE PERFORMED
- OUTER ITER.:     7 BACKTRACK ITERS.:     6 INIT. L2NORM:   2.20     FIN. L2NORM:   2.20     FIN. ALPHA:   1.00     UPDATE PERFORMED
+ OUTER ITER.:     2 BACKTRACK ITERS.:     6 INIT. L2NORM:   9.51     FIN. L2NORM:   9.51     FIN. ALPHA:   1.00     UPDATE PERFORMED
  INITIAL HNEW IS AN EXACT SOLUTION.
 
  NO OUTPUT CONTROL FOR STRESS PERIOD    1   TIME STEP    8
@@ -8788,7 +8784,7 @@ IU           508
  -------------------------------------------------------------------------------
  
  SOLVING FOR HEAD 
- OUTER ITER.:     5 BACKTRACK ITERS.:     6 INIT. L2NORM:   5.52     FIN. L2NORM:   5.52     FIN. ALPHA:   1.00     UPDATE PERFORMED
+ OUTER ITER.:     2 BACKTRACK ITERS.:     6 INIT. L2NORM:   8.27     FIN. L2NORM:   8.27     FIN. ALPHA:   1.00     UPDATE PERFORMED
  INITIAL HNEW IS AN EXACT SOLUTION.
 
  NO OUTPUT CONTROL FOR STRESS PERIOD    1   TIME STEP    9
@@ -8801,7 +8797,7 @@ IU           508
  -------------------------------------------------------------------------------
  
  SOLVING FOR HEAD 
- OUTER ITER.:     5 BACKTRACK ITERS.:     6 INIT. L2NORM:   4.56     FIN. L2NORM:   4.56     FIN. ALPHA:   1.00     UPDATE PERFORMED
+ OUTER ITER.:     2 BACKTRACK ITERS.:     6 INIT. L2NORM:   7.28     FIN. L2NORM:   7.28     FIN. ALPHA:   1.00     UPDATE PERFORMED
  INITIAL HNEW IS AN EXACT SOLUTION.
 
  NO OUTPUT CONTROL FOR STRESS PERIOD    1   TIME STEP   10
@@ -8814,7 +8810,7 @@ IU           508
  -------------------------------------------------------------------------------
  
  SOLVING FOR HEAD 
- OUTER ITER.:     5 BACKTRACK ITERS.:     6 INIT. L2NORM:   3.83     FIN. L2NORM:   3.83     FIN. ALPHA:   1.00     UPDATE PERFORMED
+ OUTER ITER.:     2 BACKTRACK ITERS.:     6 INIT. L2NORM:   6.49     FIN. L2NORM:   6.49     FIN. ALPHA:   1.00     UPDATE PERFORMED
  INITIAL HNEW IS AN EXACT SOLUTION.
 
  NO OUTPUT CONTROL FOR STRESS PERIOD    1   TIME STEP   11
@@ -8827,7 +8823,7 @@ IU           508
  -------------------------------------------------------------------------------
  
  SOLVING FOR HEAD 
- OUTER ITER.:     5 BACKTRACK ITERS.:     6 INIT. L2NORM:   3.26     FIN. L2NORM:   3.26     FIN. ALPHA:   1.00     UPDATE PERFORMED
+ OUTER ITER.:     2 BACKTRACK ITERS.:     6 INIT. L2NORM:   5.83     FIN. L2NORM:   5.83     FIN. ALPHA:   1.00     UPDATE PERFORMED
  INITIAL HNEW IS AN EXACT SOLUTION.
 
  NO OUTPUT CONTROL FOR STRESS PERIOD    1   TIME STEP   12
@@ -8840,7 +8836,7 @@ IU           508
  -------------------------------------------------------------------------------
  
  SOLVING FOR HEAD 
- OUTER ITER.:     5 BACKTRACK ITERS.:     6 INIT. L2NORM:   2.81     FIN. L2NORM:   2.81     FIN. ALPHA:   1.00     UPDATE PERFORMED
+ OUTER ITER.:     2 BACKTRACK ITERS.:     6 INIT. L2NORM:   5.29     FIN. L2NORM:   5.29     FIN. ALPHA:   1.00     UPDATE PERFORMED
  INITIAL HNEW IS AN EXACT SOLUTION.
 
  NO OUTPUT CONTROL FOR STRESS PERIOD    1   TIME STEP   13
@@ -8853,7 +8849,7 @@ IU           508
  -------------------------------------------------------------------------------
  
  SOLVING FOR HEAD 
- OUTER ITER.:     5 BACKTRACK ITERS.:     6 INIT. L2NORM:   2.44     FIN. L2NORM:   2.44     FIN. ALPHA:   1.00     UPDATE PERFORMED
+ OUTER ITER.:     2 BACKTRACK ITERS.:     6 INIT. L2NORM:   4.82     FIN. L2NORM:   4.82     FIN. ALPHA:   1.00     UPDATE PERFORMED
  INITIAL HNEW IS AN EXACT SOLUTION.
 
  NO OUTPUT CONTROL FOR STRESS PERIOD    1   TIME STEP   14
@@ -8866,7 +8862,7 @@ IU           508
  -------------------------------------------------------------------------------
  
  SOLVING FOR HEAD 
- OUTER ITER.:     5 BACKTRACK ITERS.:     6 INIT. L2NORM:   2.14     FIN. L2NORM:   2.14     FIN. ALPHA:   1.00     UPDATE PERFORMED
+ OUTER ITER.:     2 BACKTRACK ITERS.:     6 INIT. L2NORM:   4.43     FIN. L2NORM:   4.43     FIN. ALPHA:   1.00     UPDATE PERFORMED
  INITIAL HNEW IS AN EXACT SOLUTION.
 
  NO OUTPUT CONTROL FOR STRESS PERIOD    1   TIME STEP   15
@@ -8879,7 +8875,7 @@ IU           508
  -------------------------------------------------------------------------------
  
  SOLVING FOR HEAD 
- OUTER ITER.:     5 BACKTRACK ITERS.:     6 INIT. L2NORM:   1.90     FIN. L2NORM:   1.90     FIN. ALPHA:   1.00     UPDATE PERFORMED
+ OUTER ITER.:     2 BACKTRACK ITERS.:     6 INIT. L2NORM:   4.08     FIN. L2NORM:   4.08     FIN. ALPHA:   1.00     UPDATE PERFORMED
  INITIAL HNEW IS AN EXACT SOLUTION.
 
  NO OUTPUT CONTROL FOR STRESS PERIOD    1   TIME STEP   16
@@ -8892,7 +8888,7 @@ IU           508
  -------------------------------------------------------------------------------
  
  SOLVING FOR HEAD 
- OUTER ITER.:     5 BACKTRACK ITERS.:     6 INIT. L2NORM:   1.69     FIN. L2NORM:   1.69     FIN. ALPHA:   1.00     UPDATE PERFORMED
+ OUTER ITER.:     2 BACKTRACK ITERS.:     6 INIT. L2NORM:   3.79     FIN. L2NORM:   3.79     FIN. ALPHA:   1.00     UPDATE PERFORMED
  INITIAL HNEW IS AN EXACT SOLUTION.
 
  NO OUTPUT CONTROL FOR STRESS PERIOD    1   TIME STEP   17
@@ -8905,7 +8901,7 @@ IU           508
  -------------------------------------------------------------------------------
  
  SOLVING FOR HEAD 
- OUTER ITER.:     5 BACKTRACK ITERS.:     6 INIT. L2NORM:   1.52     FIN. L2NORM:   1.52     FIN. ALPHA:   1.00     UPDATE PERFORMED
+ OUTER ITER.:     2 BACKTRACK ITERS.:     6 INIT. L2NORM:   3.52     FIN. L2NORM:   3.52     FIN. ALPHA:   1.00     UPDATE PERFORMED
  INITIAL HNEW IS AN EXACT SOLUTION.
 
  NO OUTPUT CONTROL FOR STRESS PERIOD    1   TIME STEP   18
@@ -8918,6 +8914,7 @@ IU           508
  -------------------------------------------------------------------------------
  
  SOLVING FOR HEAD 
+ OUTER ITER.:     2 BACKTRACK ITERS.:     6 INIT. L2NORM:   3.29     FIN. L2NORM:   3.29     FIN. ALPHA:   1.00     UPDATE PERFORMED
  INITIAL HNEW IS AN EXACT SOLUTION.
 
  NO OUTPUT CONTROL FOR STRESS PERIOD    1   TIME STEP   19
@@ -8930,6 +8927,7 @@ IU           508
  -------------------------------------------------------------------------------
  
  SOLVING FOR HEAD 
+ OUTER ITER.:     2 BACKTRACK ITERS.:     6 INIT. L2NORM:   3.09     FIN. L2NORM:   3.09     FIN. ALPHA:   1.00     UPDATE PERFORMED
  INITIAL HNEW IS AN EXACT SOLUTION.
 
  NO OUTPUT CONTROL FOR STRESS PERIOD    1   TIME STEP   20
@@ -8942,6 +8940,7 @@ IU           508
  -------------------------------------------------------------------------------
  
  SOLVING FOR HEAD 
+ OUTER ITER.:     2 BACKTRACK ITERS.:     6 INIT. L2NORM:   2.90     FIN. L2NORM:   2.90     FIN. ALPHA:   1.00     UPDATE PERFORMED
  INITIAL HNEW IS AN EXACT SOLUTION.
 
  NO OUTPUT CONTROL FOR STRESS PERIOD    1   TIME STEP   21
@@ -8954,6 +8953,7 @@ IU           508
  -------------------------------------------------------------------------------
  
  SOLVING FOR HEAD 
+ OUTER ITER.:     2 BACKTRACK ITERS.:     6 INIT. L2NORM:   2.74     FIN. L2NORM:   2.74     FIN. ALPHA:   1.00     UPDATE PERFORMED
  INITIAL HNEW IS AN EXACT SOLUTION.
 
  NO OUTPUT CONTROL FOR STRESS PERIOD    1   TIME STEP   22
@@ -8966,6 +8966,7 @@ IU           508
  -------------------------------------------------------------------------------
  
  SOLVING FOR HEAD 
+ OUTER ITER.:     2 BACKTRACK ITERS.:     6 INIT. L2NORM:   2.59     FIN. L2NORM:   2.59     FIN. ALPHA:   1.00     UPDATE PERFORMED
  INITIAL HNEW IS AN EXACT SOLUTION.
 
  NO OUTPUT CONTROL FOR STRESS PERIOD    1   TIME STEP   23
@@ -8978,6 +8979,7 @@ IU           508
  -------------------------------------------------------------------------------
  
  SOLVING FOR HEAD 
+ OUTER ITER.:     2 BACKTRACK ITERS.:     6 INIT. L2NORM:   2.45     FIN. L2NORM:   2.45     FIN. ALPHA:   1.00     UPDATE PERFORMED
  INITIAL HNEW IS AN EXACT SOLUTION.
 
  NO OUTPUT CONTROL FOR STRESS PERIOD    1   TIME STEP   24
@@ -8990,6 +8992,7 @@ IU           508
  -------------------------------------------------------------------------------
  
  SOLVING FOR HEAD 
+ OUTER ITER.:     2 BACKTRACK ITERS.:     6 INIT. L2NORM:   2.33     FIN. L2NORM:   2.33     FIN. ALPHA:   1.00     UPDATE PERFORMED
  INITIAL HNEW IS AN EXACT SOLUTION.
 
  NO OUTPUT CONTROL FOR STRESS PERIOD    1   TIME STEP   25
@@ -9002,6 +9005,7 @@ IU           508
  -------------------------------------------------------------------------------
  
  SOLVING FOR HEAD 
+ OUTER ITER.:     2 BACKTRACK ITERS.:     6 INIT. L2NORM:   2.22     FIN. L2NORM:   2.22     FIN. ALPHA:   1.00     UPDATE PERFORMED
  INITIAL HNEW IS AN EXACT SOLUTION.
 
  NO OUTPUT CONTROL FOR STRESS PERIOD    1   TIME STEP   26
@@ -9014,6 +9018,7 @@ IU           508
  -------------------------------------------------------------------------------
  
  SOLVING FOR HEAD 
+ OUTER ITER.:     2 BACKTRACK ITERS.:     6 INIT. L2NORM:   2.11     FIN. L2NORM:   2.11     FIN. ALPHA:   1.00     UPDATE PERFORMED
  INITIAL HNEW IS AN EXACT SOLUTION.
 
  NO OUTPUT CONTROL FOR STRESS PERIOD    1   TIME STEP   27
@@ -9026,6 +9031,7 @@ IU           508
  -------------------------------------------------------------------------------
  
  SOLVING FOR HEAD 
+ OUTER ITER.:     2 BACKTRACK ITERS.:     6 INIT. L2NORM:   2.02     FIN. L2NORM:   2.02     FIN. ALPHA:   1.00     UPDATE PERFORMED
  INITIAL HNEW IS AN EXACT SOLUTION.
 
  NO OUTPUT CONTROL FOR STRESS PERIOD    1   TIME STEP   28
@@ -9038,6 +9044,7 @@ IU           508
  -------------------------------------------------------------------------------
  
  SOLVING FOR HEAD 
+ OUTER ITER.:     2 BACKTRACK ITERS.:     6 INIT. L2NORM:   1.93     FIN. L2NORM:   1.93     FIN. ALPHA:   1.00     UPDATE PERFORMED
  INITIAL HNEW IS AN EXACT SOLUTION.
 
  NO OUTPUT CONTROL FOR STRESS PERIOD    1   TIME STEP   29
@@ -9050,6 +9057,7 @@ IU           508
  -------------------------------------------------------------------------------
  
  SOLVING FOR HEAD 
+ OUTER ITER.:     2 BACKTRACK ITERS.:     6 INIT. L2NORM:   1.85     FIN. L2NORM:   1.85     FIN. ALPHA:   1.00     UPDATE PERFORMED
  INITIAL HNEW IS AN EXACT SOLUTION.
 
  NO OUTPUT CONTROL FOR STRESS PERIOD    1   TIME STEP   30
@@ -9062,6 +9070,7 @@ IU           508
  -------------------------------------------------------------------------------
  
  SOLVING FOR HEAD 
+ OUTER ITER.:     2 BACKTRACK ITERS.:     6 INIT. L2NORM:   1.77     FIN. L2NORM:   1.77     FIN. ALPHA:   1.00     UPDATE PERFORMED
  INITIAL HNEW IS AN EXACT SOLUTION.
 
  NO OUTPUT CONTROL FOR STRESS PERIOD    1   TIME STEP   31
@@ -9074,6 +9083,7 @@ IU           508
  -------------------------------------------------------------------------------
  
  SOLVING FOR HEAD 
+ OUTER ITER.:     2 BACKTRACK ITERS.:     6 INIT. L2NORM:   1.70     FIN. L2NORM:   1.70     FIN. ALPHA:   1.00     UPDATE PERFORMED
  INITIAL HNEW IS AN EXACT SOLUTION.
 
  NO OUTPUT CONTROL FOR STRESS PERIOD    1   TIME STEP   32
@@ -9086,6 +9096,7 @@ IU           508
  -------------------------------------------------------------------------------
  
  SOLVING FOR HEAD 
+ OUTER ITER.:     2 BACKTRACK ITERS.:     6 INIT. L2NORM:   1.63     FIN. L2NORM:   1.63     FIN. ALPHA:   1.00     UPDATE PERFORMED
  INITIAL HNEW IS AN EXACT SOLUTION.
 
  NO OUTPUT CONTROL FOR STRESS PERIOD    1   TIME STEP   33
@@ -9098,6 +9109,7 @@ IU           508
  -------------------------------------------------------------------------------
  
  SOLVING FOR HEAD 
+ OUTER ITER.:     2 BACKTRACK ITERS.:     6 INIT. L2NORM:   1.57     FIN. L2NORM:   1.57     FIN. ALPHA:   1.00     UPDATE PERFORMED
  INITIAL HNEW IS AN EXACT SOLUTION.
 
  NO OUTPUT CONTROL FOR STRESS PERIOD    1   TIME STEP   34
@@ -9110,6 +9122,7 @@ IU           508
  -------------------------------------------------------------------------------
  
  SOLVING FOR HEAD 
+ OUTER ITER.:     2 BACKTRACK ITERS.:     6 INIT. L2NORM:   1.52     FIN. L2NORM:   1.52     FIN. ALPHA:   1.00     UPDATE PERFORMED
  INITIAL HNEW IS AN EXACT SOLUTION.
 
  NO OUTPUT CONTROL FOR STRESS PERIOD    1   TIME STEP   35
@@ -9122,6 +9135,7 @@ IU           508
  -------------------------------------------------------------------------------
  
  SOLVING FOR HEAD 
+ OUTER ITER.:     2 BACKTRACK ITERS.:     6 INIT. L2NORM:   1.46     FIN. L2NORM:   1.46     FIN. ALPHA:   1.00     UPDATE PERFORMED
  INITIAL HNEW IS AN EXACT SOLUTION.
 
  NO OUTPUT CONTROL FOR STRESS PERIOD    1   TIME STEP   36
@@ -69192,7 +69206,7 @@ IU           508
 
               IN:                                      IN:
               ---                                      ---
-          LATERAL FLOW  =  1568108160.0000         LATERAL FLOW  =        2592.7000
+          LATERAL FLOW  =   156810416.0000         LATERAL FLOW  =         259.2700
          UNSAT. RUNOFF  =           0.0000        UNSAT. RUNOFF  =           0.0000
               RAINFALL  =           0.0000             RAINFALL  =           0.0000
            EVAPORATION  =           0.0000          EVAPORATION  =           0.0000
@@ -69200,9 +69214,9 @@ IU           508
          EXTERNAL FLOW  =           0.0000        EXTERNAL FLOW  =           0.0000
          BOUNDARY FLOW  =           0.0000        BOUNDARY FLOW  =           0.0000
          CONSTANT FLOW  =           0.0000        CONSTANT FLOW  =           0.0000
-               STORAGE  =    12873834.0000              STORAGE  =           0.0000
+               STORAGE  =    12935568.0000              STORAGE  =       3.4310E-07
 
-               TOTAL IN =  1580982016.0000              TOTAL IN =        2592.7000
+               TOTAL IN =   169745984.0000              TOTAL IN =         259.2700
 
              OUT:                                     OUT:
              ----                                     ----
@@ -69213,12 +69227,12 @@ IU           508
          REACH-AQ FLOW  =           0.0000        REACH-AQ FLOW  =           0.0000
          EXTERNAL FLOW  =           0.0000        EXTERNAL FLOW  =           0.0000
          BOUNDARY FLOW  =           0.0000        BOUNDARY FLOW  =           0.0000
-         CONSTANT FLOW  =  1580486272.0000        CONSTANT FLOW  =        2592.7000
-               STORAGE  =      498723.4062              STORAGE  =           0.0000
+         CONSTANT FLOW  =   169190064.0000        CONSTANT FLOW  =         259.2700
+               STORAGE  =      560537.0625              STORAGE  =           0.0000
 
-              TOTAL OUT =  1580984960.0000             TOTAL OUT =        2592.7000
+              TOTAL OUT =   169750608.0000             TOTAL OUT =         259.2700
 
-               IN - OUT =       -2944.0000              IN - OUT =           0.0000
+               IN - OUT =       -4624.0000              IN - OUT =           0.0000
 
     PERCENT DISCREPANCY =           0.00     PERCENT DISCREPANCY =           0.00
 
@@ -69266,10 +69280,10 @@ IU           508
          TOTAL TIME 6.04800E+05  10080.      168.00      7.0000     1.91650E-02
 1
 
- Run end date and time (yyyy/mm/dd hh:mm:ss): 2012/09/10 15:57:09
- Elapsed run time: 14.075 Seconds
+ Run end date and time (yyyy/mm/dd hh:mm:ss): 2012/10/17 14:16:34
+ Elapsed run time: 17.156 Seconds
 
 
 
  SUMMARY OF SWR1 PROCESS EXECUTION TIME
- TOTAL SWR1 EXECUTION TIME:     12.48008     SECONDS
+ TOTAL SWR1 EXECUTION TIME:     15.28810     SECONDS

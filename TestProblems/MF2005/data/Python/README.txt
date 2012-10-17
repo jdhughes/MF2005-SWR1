@@ -1,4 +1,4 @@
-09/12/2012
+10/17/2012
 
 The python scripts in this subdirectory can be used to extract data
 from the SWR1 output files for Test Simulations 1-5 documented in the
@@ -6,7 +6,6 @@ SWR1 Process report (http://pubs.usgs.gov/tm/6a40/).
 
 Included scripts:
     SWRSample01.py   
-    SWRSample02.02.py
     SWRSample02.py   
     SWRSample03.py   
     SWRSample04.py   
@@ -27,7 +26,7 @@ Python dependencies include:
     MATPLOTLIB
     
 Scripts also depend on included MFBinaryClass.py. This script includes
-functionality for reading all binary SWR1 output for version 1.0 of
+functionality for reading all binary SWR1 output for version 1.01.0 of
 the SWR1 Process.
 
 Only limited assistance can be provided for running the provided scripts

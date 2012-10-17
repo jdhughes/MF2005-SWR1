@@ -851,7 +851,7 @@ C     ******************************************************************
 C
 C     SPECIFICATIONS:
 C     ------------------------------------------------------------------
-        USE GLOBAL,      ONLY:IOUT,NCOL,NROW,NLAY,BOTM,LBOTM
+        USE GLOBAL,      ONLY:IOUT,NCOL,NROW,NLAY,BOTM,LBOTM,IBOUND
         USE GWFSWIMODULE
         IMPLICIT NONE
 C       + + + DUMMY ARGUMENTS + + +
@@ -875,6 +875,9 @@ C--------SET FIRST AND LAST PLANE EQUAL TO TOP AND BOTTOM OF THE AQUIFER
           DO k = 1, NLAY
             DO i = 1, NROW
               DO j = 1, NCOL
+C                 SKIP INACTIVE CELLS                
+                IF ( ABS( IBOUND(j,i,k) ).EQ.0 ) CYCLE
+C
                 bbot=BOTM(j,i,LBOTM(k))
                 ttop=BOTM(j,i,LBOTM(k)-1)
                 IF (bbot.GT.ttop) THEN

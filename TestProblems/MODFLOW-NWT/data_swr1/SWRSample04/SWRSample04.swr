@@ -17,9 +17,9 @@ END
 
 # DATASET 3 - SOLVER PARAMETERS
 # SOLVER NOUTER NINNER IBT    TOLX     TOLF    TOLA DAMPSS DAMPTR IPRSWR MUTSWR IPC NLEVELS DROPTOL IBTPRT
-#      1    100     50  60 1.0E-09   0.0001    0.00    1.0    1.0      0      0                          1
-#      2    100     50  60 1.0E-09   0.0010    0.00    1.0    1.0      0      0   3                      1
-       2    100     50  60 1.0E-09   0.0002    0.00    1.0    1.0      0      0   2                      1
+       1    100     50  60 1.0E-09   0.0002    0.00    1.0    1.0      0      0                          1
+##     2    100     50  60 1.0E-09   0.0010    0.00    1.0    1.0      0      0   3                      1
+#      2    100     50  60 1.0E-09   0.0002    0.00    1.0    1.0      0      0   2                      1
 
 # DATASET 4A - REACH DATA
 #                                LAY  ROW  COL

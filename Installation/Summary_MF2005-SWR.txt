@@ -28,7 +28,7 @@ HISTORY
       SWR1 Process Version 1.0 09/10/2012 - Initial release. Also see the file
         ‘SWR1Process_release.txt’ for additional release notes.
 
-      SWR1 Process Version 1.01.0 09/10/2012 - Also see the file
+      SWR1 Process Version 1.01.0 10/17/2012 - Also see the file
         ‘SWR1Process_release.txt’ for additional release notes.
 
 SYSTEM REQUIREMENTS
