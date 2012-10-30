@@ -1,9 +1,14 @@
 C
-C     VERSION 1.01 SWR1 for MODFLOW NWT
+C     VERSION 1.02 SWR1 for MODFLOW NWT
+C     CHANGES
+C     o IF RTMIN IS ZERO SET RTMIN TO THE MINIMUM DELT FOR THE CURRENT MODFLOW 
+C       STRESS PERIOD - ITSPMIN SET TO 1
+C     o IF RTMAX IS ZERO SET RTMAX TO DELT FOR THE CURRENT MODFLOW TIMESTEP -
+C       ITSPMAX VARIABLE SET TO 1
 C
       MODULE GWFSWRMODULE
         CHARACTER(LEN=64),PARAMETER :: VERSION_SWR =
-     +'$Id: gwf2swr7.f 1.01 2012-09-10 15:00:00Z jdhughes $'
+     +'$Id: gwf2swr7.f 1.02 2012-10-30 15:00:00Z jdhughes $'
 C
 C---------INVARIANT PARAMETERS
         INTEGER, PARAMETER          :: IUZFOFFS     = 100000
@@ -424,6 +429,8 @@ C         SWR VARIABLES
         INTEGER,SAVE,POINTER          :: NTTSMIN
         LOGICAL,SAVE,POINTER          :: FAILTIME
         INTEGER,SAVE,POINTER          :: ISWRCNVG
+        INTEGER,SAVE,POINTER          :: ITSPMIN
+        INTEGER,SAVE,POINTER          :: ITSPMAX
         REAL,SAVE,POINTER             :: RTIME
         REAL,SAVE,POINTER             :: RTIME0
         REAL,SAVE,POINTER             :: RTMIN
@@ -552,6 +559,8 @@ C         SWR VARIABLES
           INTEGER,POINTER          :: NTTSMIN
           LOGICAL,POINTER          :: FAILTIME
           INTEGER,POINTER          :: ISWRCNVG
+          INTEGER,POINTER          :: ITSPMIN
+          INTEGER,POINTER          :: ITSPMAX
           REAL,POINTER             :: RTIME
           REAL,POINTER             :: RTIME0
           REAL,POINTER             :: RTMIN
@@ -896,6 +905,7 @@ C       SWR1 VARIABLES
       ALLOCATE(NTMIN,NTMAX,RTMULT,RTOTIM,NTMULT,IADTIME,TADMULT)
       ALLOCATE(NUMTIME,NUMTIME0,NADPCNT,NADPCNT0)
       ALLOCATE(NTTSMIN,FAILTIME,ISWRCNVG)
+      ALLOCATE(ITSPMIN,ITSPMAX)
       ALLOCATE(RTIME,RTIME0,RTMIN,RTMAX,RTSTMAX,RTPRN,RSWRPRN,RSWRPRN0)
       ALLOCATE(IBT)
       ALLOCATE(TOLS,TOLR,TOLA,DAMPSS,DAMPTR,IPRSWR,MUTSWR)
@@ -1127,23 +1137,31 @@ C         SOLUTION CONTROLS - INPUT ITEM 2
       IF ( RTIME.LT.RZERO ) 
      2  CALL USTOP('RTINI MUST BE GREATER THAN ZERO')
       CALL URWORD(line, lloc, istart, istop, 3, ival, RTMIN, IOUT, In)
-      IF ( RTMIN.LT.RZERO ) 
-     2  CALL USTOP('RTMIN MUST BE GREATER THAN ZERO')
+      ITSPMIN = 0
+      IF ( RTMIN.LT.RZERO ) THEN
+        CALL USTOP('RTMIN MUST BE GREATER THAN ZERO')
+      ELSE IF ( RTMIN.EQ.RZERO ) THEN
+        ITSPMIN = 1
+      END IF
       CALL URWORD(line, lloc, istart, istop, 3, ival, RTMAX, IOUT, In)
-      IF ( RTMAX.LT.RZERO ) 
-     2  CALL USTOP('RTMAX MUST BE GREATER THAN ZERO') 
-      RTSTMAX = RTMAX
+      ITSPMAX = 0
+      IF ( RTMAX.LT.RZERO ) THEN
+        CALL USTOP('RTMAX MUST BE GREATER THAN ZERO') 
+      ELSE IF ( RTMAX.EQ.RZERO ) THEN
+        ITSPMAX = 1
+      END IF
+!      RTSTMAX = RTMAX
       CALL URWORD(line, lloc, istart, istop, 3, ival, RTPRN, IOUT, In)
       IF ( RTPRN.LT.RTMIN ) RTPRN = RZERO
       RSWRPRN  = RTPRN
       RSWRPRN0 = RTPRN
-      IF ( RTMAX.LT.RTMIN ) THEN
+      IF ( RTMAX.LT.RTMIN .AND. ITSPMAX.EQ.0 ) THEN
         CALL USTOP('RTMAX MUST BE GREATER THAN OR EQUAL TO RTMIN') 
       END IF
-      IF ( RTIME.LT.RTMIN ) THEN
+      IF ( RTIME.LT.RTMIN .AND. ITSPMIN.EQ.0 ) THEN
         CALL USTOP('RTINI MUST BE GREATER THAN OR EQUAL TO RTMIN') 
       END IF
-      IF ( RTIME.GT.RTMAX ) THEN
+      IF ( RTIME.GT.RTMAX .AND. ITSPMAX.EQ.0 ) THEN
         CALL USTOP('RTINI MUST BE LESS THAN OR EQUAL TO RTMAX') 
       END IF
       CALL URWORD(line, lloc, istart, istop, 3, ival, RTMULT, IOUT, In)
@@ -1166,6 +1184,24 @@ C         SOLUTION CONTROLS - INPUT ITEM 2
         IDPTHSCL = 0
       END IF
       DUPDPTH  = DMINDPTH * 10.0D+00
+C
+C       SET RTIME, RTMIN, AND/OR RTMAX IF ZERO VALUES ARE SPECIFIED FOR
+C       ANY OF THESE VARIABLES
+!      CALL SSWR_GET_MODFLOW_TIME(Nmaxper,Ngetstp,Rt,Rtot)
+      IF ( ITSPMIN.EQ.1 ) THEN
+        CALL SSWR_GET_MODFLOW_TIME(1,1,rt,RTOTIM)
+        RTIME = rt
+        RTMIN = rt
+      END IF
+      IF ( ITSPMAX.EQ.1 ) THEN
+        CALL SSWR_GET_MODFLOW_TIME(1,1,Rt,RTOTIM)
+        RTMAX = rt
+        IF ( RTIME.GT.RTMAX ) THEN
+          RTIME = RTMAX
+        END IF
+      END IF
+C     SET RTSTMAX NOW THAT RTMAX IS FINAL FOR AT LEAST THE FIRST STRESS PERIOD
+      RTSTMAX = RTMAX
 C       SET DEFAULT VALUES FOR ADAPTIVE TIME STEPPING
       IADTIME = 0
       TADMULT = DONE
@@ -1173,8 +1209,15 @@ C       SET DEFAULT VALUES FOR ADAPTIVE TIME STEPPING
       DMAXSTG = DZERO
       DMAXINF = DZERO
 C       DETERMINE IF ADAPTIVE TIME STEPPING IS BEING USED
-      IF ( RTMIN.LT.RTMAX .AND. RTMULT.GT.RONE ) THEN
-        IADTIME = 1
+      IF (   RTMIN.LT.RTMAX .OR.
+     2     ( ITSPMIN.EQ.1 .AND. ITSPMAX.EQ.1 ) ) THEN
+        IF ( RTMULT.GT.RONE ) THEN
+          IADTIME = 1
+        END IF
+      END IF
+!      IF ( RTMIN.LT.RTMAX .AND. RTMULT.GT.RONE ) THEN
+!        IADTIME = 1
+      IF ( IADTIME.EQ.1 ) THEN
         CALL URWORD(line, lloc, istart, istop, 3, ival, r, IOUT, In)
         DMAXRAI  = MAX( DZERO, SSWR_R2D(r) )
         CALL URWORD(line, lloc, istart, istop, 3, ival, r, IOUT, In)
@@ -1301,19 +1344,11 @@ C-------DETERMINE NTMAX
       totim  = RZERO
       RTOTIM = RZERO
       ierr   = 0
-      IF ( RTMIN.GT.RZERO ) THEN
+!      IF ( RTMIN.GT.RZERO ) THEN
+      IF ( IADTIME.EQ.1 ) THEN
         DO n = 1, NPER
-          RTOTIM  = RTOTIM + PERLEN(n)
-          rt = PERLEN(n) / REAL( NSTP(n), 4 )
           DO i = 1, NSTP(n)
-            IF ( TSMULT(n).NE.RONE ) THEN
-              IF ( i.GT.1 ) THEN
-                rt = rt * TSMULT(n)
-              ELSE
-                rt = PERLEN(n) * ( RONE - TSMULT(n) ) /
-     2              ( RONE - TSMULT(n)**NSTP(n) )
-              END IF
-            END  IF
+            CALL SSWR_GET_MODFLOW_TIME(n,i,rt,RTOTIM)
             IF ( RTMAX.GT.rt ) THEN
               ierr = 1
               WRITE (IOUT,'(1X,2(A,1X,I10,1X),2(A,1X,G10.3,1X),A)')
@@ -1325,6 +1360,28 @@ C-------DETERMINE NTMAX
             NTMAX = MAX( NTMAX, CEILING( rt / RTMIN ) + 1 )
           END DO
         END DO
+!        DO n = 1, NPER
+!          RTOTIM  = RTOTIM + PERLEN(n)
+!          rt = PERLEN(n) / REAL( NSTP(n), 4 )
+!          DO i = 1, NSTP(n)
+!            IF ( TSMULT(n).NE.RONE ) THEN
+!              IF ( i.GT.1 ) THEN
+!                rt = rt * TSMULT(n)
+!              ELSE
+!                rt = PERLEN(n) * ( RONE - TSMULT(n) ) /
+!     2              ( RONE - TSMULT(n)**NSTP(n) )
+!              END IF
+!            IF ( RTMAX.GT.rt ) THEN
+!              ierr = 1
+!              WRITE (IOUT,'(1X,2(A,1X,I10,1X),2(A,1X,G10.3,1X),A)')
+!     2          'MODFLOW STRESS PERIOD', n,
+!     3          'TIME STEP', i, 
+!     4          ': RTMAX (', RTMAX, ') EXCEEDS DELT (', rt, ')'
+!            END IF
+!            totim = totim + rt
+!            NTMAX = MAX( NTMAX, CEILING( rt / RTMIN ) + 1 )
+!          END DO
+!        END DO
       ELSE
         NTMAX = 1
       END IF
@@ -1346,16 +1403,17 @@ C-------DETERMINE THE MAXIMUM NUMBER OF PRINT TIMES PER MODFLOW TIME STEP
         tp0 = RZERO
         DO n = 1, NPER
           tf = tf + PERLEN(n)
-          rt = PERLEN(n) / REAL( NSTP(n), 4 )
+!          rt = PERLEN(n) / REAL( NSTP(n), 4 )
           DO i = 1, NSTP(n)
-            IF ( TSMULT(n).NE.RONE ) THEN
-              IF ( i.GT.1 ) THEN
-                rt = rt * TSMULT(n)
-              ELSE
-                rt = PERLEN(n) * ( RONE - TSMULT(n) ) /
-     2               ( RONE - TSMULT(n)**NSTP(n) )
-              END IF
-            END  IF
+            CALL SSWR_GET_MODFLOW_TIME(n,i,rt,RTOTIM)
+!            IF ( TSMULT(n).NE.RONE ) THEN
+!              IF ( i.GT.1 ) THEN
+!                rt = rt * TSMULT(n)
+!              ELSE
+!                rt = PERLEN(n) * ( RONE - TSMULT(n) ) /
+!     2               ( RONE - TSMULT(n)**NSTP(n) )
+!              END IF
+!            END  IF
             t1   = t0 + rt
             ival = 0
             DO
@@ -1369,6 +1427,31 @@ C-------DETERMINE THE MAXIMUM NUMBER OF PRINT TIMES PER MODFLOW TIME STEP
           END DO
           t0 = tf
         END DO
+!        DO n = 1, NPER
+!          tf = tf + PERLEN(n)
+!          rt = PERLEN(n) / REAL( NSTP(n), 4 )
+!          DO i = 1, NSTP(n)
+!            IF ( TSMULT(n).NE.RONE ) THEN
+!              IF ( i.GT.1 ) THEN
+!                rt = rt * TSMULT(n)
+!              ELSE
+!                rt = PERLEN(n) * ( RONE - TSMULT(n) ) /
+!     2               ( RONE - TSMULT(n)**NSTP(n) )
+!              END IF
+!            END  IF
+!            t1   = t0 + rt
+!            ival = 0
+!            DO
+!              tp1 = tp0 + RTPRN
+!              IF ( tp1.GT.t1 ) EXIT
+!              ival = ival + 1
+!              tp0  = tp1
+!            END DO
+!            IF ( ival.GT.NPMAX ) NPMAX = ival
+!            t0 = t1
+!          END DO
+!          t0 = tf
+!        END DO
       END IF
 C       NTMAX IS THE SUM OF RTMIN TIME STEPS PER MODFLOW
 C       TIME STEP, THE MAXIMUM NUMBER OF PRINT TIMES PER
@@ -3822,9 +3905,19 @@ C
       KMFITER = Kkiter
 C
 C-------SET RTMAX AND RTIME TO DELT IF RTMIN EQUALS RZERO
-      IF ( RTMIN.EQ.RZERO ) THEN
+!      IF ( RTMIN.EQ.RZERO ) THEN
+      IF ( ITSPMIN.EQ.1 ) THEN
+        RTMIN = DELT
+        IF ( RTIME.LT.RTMIN ) THEN
+          RTIME = RTMIN
+        END IF
+      END IF
+      IF ( ITSPMAX.EQ.1 ) THEN
         RTMAX = DELT
-        RTIME = RTMAX
+        RTSTMAX = RTMAX
+        IF ( RTIME.GT.RTMAX ) THEN
+          RTIME = RTMAX
+        END IF
       END IF
 C
 C-------SCALE TIME BASED ON RAINFALL
@@ -5185,6 +5278,8 @@ C         SWR1 VARIABLES
         DEALLOCATE(GWFSWRDAT(Igrid)%NTTSMIN)
         DEALLOCATE(GWFSWRDAT(Igrid)%FAILTIME)
         DEALLOCATE(GWFSWRDAT(Igrid)%ISWRCNVG)
+        DEALLOCATE(GWFSWRDAT(Igrid)%ITSPMIN)
+        DEALLOCATE(GWFSWRDAT(Igrid)%ITSPMAX)
         DEALLOCATE(GWFSWRDAT(Igrid)%RTIME)
         DEALLOCATE(GWFSWRDAT(Igrid)%RTIME0)
         DEALLOCATE(GWFSWRDAT(Igrid)%RTMIN)
@@ -5330,6 +5425,8 @@ C         SWR1 VARIABLES
         NTTSMIN=>GWFSWRDAT(Igrid)%NTTSMIN
         FAILTIME=>GWFSWRDAT(Igrid)%FAILTIME
         ISWRCNVG=>GWFSWRDAT(Igrid)%ISWRCNVG
+        ITSPMIN=>GWFSWRDAT(Igrid)%ITSPMIN
+        ITSPMAX=>GWFSWRDAT(Igrid)%ITSPMAX
         RTIME=>GWFSWRDAT(Igrid)%RTIME
         RTIME0=>GWFSWRDAT(Igrid)%RTIME0
         RTMIN=>GWFSWRDAT(Igrid)%RTMIN
@@ -5476,6 +5573,8 @@ C         SWR1 VARIABLES
         GWFSWRDAT(Igrid)%NTTSMIN=>NTTSMIN
         GWFSWRDAT(Igrid)%FAILTIME=>FAILTIME
         GWFSWRDAT(Igrid)%ISWRCNVG=>ISWRCNVG
+        GWFSWRDAT(Igrid)%ITSPMIN=>ITSPMIN
+        GWFSWRDAT(Igrid)%ITSPMAX=>ITSPMAX
         GWFSWRDAT(Igrid)%RTIME=>RTIME
         GWFSWRDAT(Igrid)%RTIME0=>RTIME0
         GWFSWRDAT(Igrid)%RTMIN=>RTMIN
@@ -13753,6 +13852,44 @@ C       + + + CODE + + +
 C---------RETURN
 9999    RETURN
       END SUBROUTINE SSWR_EST_EXPLICIT_SFM
+
+      SUBROUTINE SSWR_GET_MODFLOW_TIME(Nmaxper,Ngetstp,Rt,Rtot)
+        USE GWFSWRMODULE, ONLY: RZERO, RONE
+        USE GLOBAL,       ONLY: PERLEN,NSTP,TSMULT
+        IMPLICIT NONE
+C       + + + DUMMY ARGUMENTS + + +
+        INTEGER, INTENT(IN) :: Nmaxper
+        INTEGER, INTENT(IN) :: Ngetstp
+        REAL, INTENT(INOUT) :: Rtot
+        REAL, INTENT(INOUT) :: Rt
+C       + + + LOCAL DEFINITIONS + + +
+        INTEGER         :: i, n
+C       + + + FUNCTIONS + + +
+C       + + + INPUT FORMATS + + +
+C       + + + OUTPUT FORMATS + + +
+C       + + + CODE + + +
+        Rt   = RZERO
+        Rtot = RZERO
+        LPER: DO n = 1, Nmaxper
+          Rtot  = Rtot + PERLEN(n)
+          Rt = PERLEN(n) / REAL( NSTP(n), 4 )
+          LSTP: DO i = 1, NSTP(n)
+            IF ( TSMULT(n).NE.RONE ) THEN
+              IF ( i.GT.1 ) THEN
+                Rt = Rt * TSMULT(n)
+              ELSE
+                Rt = PERLEN(n) * ( RONE - TSMULT(n) ) /
+     2              ( RONE - TSMULT(n)**NSTP(n) )
+              END IF
+            END IF
+            IF ( n.EQ.Nmaxper .AND. i.EQ.Ngetstp ) THEN
+              EXIT LPER
+            END IF
+          END DO LSTP
+        END DO LPER
+C---------RETURN
+9999    RETURN
+      END SUBROUTINE SSWR_GET_MODFLOW_TIME
 
 C     + + + DUMMY ARGUMENTS + + +
 C     + + + LOCAL DEFINITIONS + + +
