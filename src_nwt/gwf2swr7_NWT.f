@@ -1644,6 +1644,14 @@ C-------WRITE REACH GROUP REACH DATA
      2        (RCHGRP(i)%REACH(j),j=1,RCHGRP(i)%NRGREACH)
       END DO
 C
+C-------GET TOTAL SIMULATION TIME FOR MODEL
+      RTOTIM = RZERO
+      DO n = 1, NPER
+        DO i = 1, NSTP(n)
+          CALL SSWR_GET_MODFLOW_TIME(n,i,rt,RTOTIM)
+        END DO
+      END DO
+C
 C-------READ TABULAR DATA DIMENSIONS - DATASET 4C
       ITABTIME = 0
       IF ( NTABS.NE.0 ) THEN
@@ -13018,6 +13026,7 @@ C     + + + CODE + + +
                 END IF
               END IF
           END SELECT
+!          ipos = MIN( ipos + 1, TSDATA%NDATA )
           ipos = ipos + 1
         END DO GETTS
 C

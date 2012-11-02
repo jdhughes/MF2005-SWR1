@@ -1428,6 +1428,7 @@ C       + + + LOCAL DEFINITIONS + + +
         INTEGER :: iu
         INTEGER :: ibd, ibdlbl
         INTEGER :: i, j, k, n
+        INTEGER :: kk
         INTEGER :: ib
         INTEGER :: iz, iz2, iz3
         INTEGER :: iz0
@@ -1445,6 +1446,7 @@ C       + + + LOCAL DEFINITIONS + + +
         REAL :: one, tled, rho
         REAL :: strg
 !        REAL :: swidelt
+        REAL :: bnwt, hnwt
         REAL :: z, zt, zb, zetac, zcalc, zdiff, zetaavg
         REAL :: nuontop, nubelbot
         REAL :: rclose
@@ -1685,9 +1687,16 @@ C---------ZONE BUDGETS
                 rrate = 0.0
 C                   BOUNDARIES
                 IF ( IBOUND(J,I,K).GT.0 ) THEN
-                  qbnd = -RHSFRESH(j,i,k) +
+                  kk = LBOTM(k)
+                  bnwt = BOTM(j,i,kk)
+                  hnwt = HNEW(j,i,k)
+                  IF ( hnwt.LT.bnwt ) THEN
+                    qbnd = 0.0
+                  ELSE
+                    qbnd = -RHSFRESH(j,i,k) +
      2                      HNEW(j,i,k) * HCOF(j,i,k)
-                   q   = q - qbnd
+                  END IF
+                  q   = q - qbnd
 C                   CONSTANT HEAD
                 ELSE
                   qch = BUFF(j,i,k)
@@ -1892,6 +1901,7 @@ C     ******************************************************************
 C
 C     SPECIFICATIONS:
 C     ------------------------------------------------------------------
+        USE GLOBAL,      ONLY:BOTM,LBOTM
         IMPLICIT NONE
 C       + + + DUMMY ARGUMENTS + + +
         INTEGER, INTENT(IN) :: J,I,K,IZ
@@ -1905,8 +1915,22 @@ C       + + + DUMMY ARGUMENTS + + +
         REAL, DIMENSION(NCOL,NROW,NLAY,NZONES), INTENT(IN)   :: SWICUMCR
 C       + + + LOCAL DEFINITIONS + + +
         INTEGER :: iz2
+        INTEGER :: kk
+        REAL :: h1, h2
+        REAL :: b1, b2
 C
 C       + + + CODE + + +
+C
+C---------FOR NWT
+        kk = LBOTM(K)
+        b1 = BOTM(J-1,I,kk)
+        b2 = BOTM(J,I,kk)
+        h1 = HNEW(J-1,I,k)
+        h2 = HNEW(J,I,k)
+        IF ( h1.LT.b1 .OR. h2.LT.b2 ) THEN
+          Q = 0.0
+          RETURN
+        END IF
 C
 C---------CALCULATE Q IN ROW DIRECTION
         Q = SWICUMCR(J-1,I,K,IZ) * (HNEW(J-1,I,K)-HNEW(J,I,K))
@@ -1947,6 +1971,7 @@ C     ******************************************************************
 C
 C     SPECIFICATIONS:
 C     ------------------------------------------------------------------
+        USE GLOBAL,      ONLY:BOTM,LBOTM
         IMPLICIT NONE
 C       + + + DUMMY ARGUMENTS + + +
         INTEGER, INTENT(IN) :: J,I,K,IZ
@@ -1960,8 +1985,22 @@ C       + + + DUMMY ARGUMENTS + + +
         REAL, DIMENSION(NCOL,NROW,NLAY,NZONES), INTENT(IN)   :: SWICUMCC
 C       + + + LOCAL DEFINITIONS + + +
         INTEGER :: iz2
+        INTEGER :: kk
+        REAL :: h1, h2
+        REAL :: b1, b2
 C
 C       + + + CODE + + +
+C
+C---------FOR NWT
+        kk = LBOTM(K)
+        b1 = BOTM(J,I-1,kk)
+        b2 = BOTM(J,I,kk)
+        h1 = HNEW(J,I-1,k)
+        h2 = HNEW(J,I,k)
+        IF ( h1.LT.b1 .OR. h2.LT.b2 ) THEN
+          Q = 0.0
+          RETURN
+        END IF
 C
 C---------CALCULATE Q IN COLUMN DIRECTION
         Q = SWICUMCC(J,I-1,K,IZ) * (HNEW(J,I-1,K)-HNEW(J,I,K))
@@ -2134,6 +2173,9 @@ C       + + + LOCAL DEFINITIONS + + +
         REAL :: qint, t1, t0, t2, b1, b0
         REAL :: switfact
         REAL :: s0, s1, s2, d0, d1, d2, dzeta1, dzeta2, b2, dzetamax
+        INTEGER :: kk1, kk2
+        REAL :: hnwt1, hnwt2
+        REAL :: bnwt1, bnwt2
 C     + + + FUNCTIONS + + +
 C     + + + CODE + + +
 C
@@ -2150,10 +2192,21 @@ C-------------------SET TEMPORARY ZETA VARIABLES
                   zt    = ZETA(j,i,k,1)
                   zb    = ZETA(j,i,k,NZONES+1)
                   zetac = ZETA(j,i,k,iz)
+C-------------------CALCULATE qztop
                   qztop = 0.0
                   IF ( k.GT.1 ) THEN
-                    qztop = CV(j,i,k-1) * (HNEW(j,i,k)-HNEW(j,i,k-1)) -
-     2                      QLEXTRA(j,i,k-1)
+C---------------------FOR NWT
+                    kk1 = LBOTM(k-1)
+                    kk2 = LBOTM(k)
+                    bnwt1 = BOTM(J,I,kk1)
+                    bnwt2 = BOTM(J,I,kk2)
+                    hnwt1 = HNEW(J,I,k-1)
+                    hnwt2 = HNEW(J,I,k)
+                    IF ( hnwt1.GE.bnwt1 .OR. hnwt2.GE.bnwt2 ) THEN
+                      qztop = CV(j,i,k-1) * 
+     2                        (HNEW(j,i,k)-HNEW(j,i,k-1)) - 
+     3                        QLEXTRA(j,i,k-1)
+                    END IF
                   END IF
 C-------------------MOVE TO UPPER OR LOWER LAYER
                   IF( NOPT.GE.0 )THEN
@@ -2203,10 +2256,21 @@ C-------------------SET TEMPORARY ZETA VARIABLES
                   zetac = ZETA(j,i,k,iz)
 
 !                  zetao = ZETAOLD(j,i,k,iz)
+C-------------------CALCULATE qztop
                   qztop = 0.0
                   IF ( k.GT.1 ) THEN
-                    qztop = CV(j,i,k-1) * (HNEW(j,i,k)-HNEW(j,i,k-1)) -
-     2                      QLEXTRA(j,i,k-1)
+C---------------------FOR NWT
+                    kk1 = LBOTM(k-1)
+                    kk2 = LBOTM(k)
+                    bnwt1 = BOTM(J,I,kk1)
+                    bnwt2 = BOTM(J,I,kk2)
+                    hnwt1 = HNEW(J,I,k-1)
+                    hnwt2 = HNEW(J,I,k)
+                    IF ( hnwt1.GE.bnwt1 .OR. hnwt2.GE.bnwt2 ) THEN
+                      qztop = CV(j,i,k-1) * 
+     2                        (HNEW(j,i,k)-HNEW(j,i,k-1)) -
+     3                        QLEXTRA(j,i,k-1)
+                    END IF
                   END IF
 C
 C-------------------ONLY EVALUATE TIP AND TOE MOVEMENT TO ADJACENT CELLS FOR CELLS WHERE
@@ -2909,6 +2973,7 @@ C     + + + LOCAL DEFINITIONS + + +
         REAL :: t
 C     + + + FUNCTIONS + + +
       INTEGER :: i, j, k
+      INTEGER :: kk
       REAL            :: zero
       DOUBLEPRECISION :: dzero
       REAL            :: rtotal
@@ -2916,6 +2981,7 @@ C     + + + FUNCTIONS + + +
       REAL            :: chch1, chch2, chch3, chch4, chch5, chch6
       REAL            :: rate
       DOUBLEPRECISION :: hd,chin,chout,xx1,xx2,xx3,xx4,xx5,xx6
+      REAL            :: b1,h1
 C     + + + CODE + + +
 C     ------------------------------------------------------------------
 C
@@ -2972,6 +3038,11 @@ C-------------ADJACENT NO-FLOW CELL, OR TO AN ADJACENT CONSTANT-HEAD CELL.
             IF ( j.EQ.1 ) GO TO 30
             IF ( IBOUND(j-1,i,k).EQ.0 ) GO TO 30
             IF ( IBOUND(j-1,i,k).LT.0 .AND. ICHFLG.EQ.0 ) GO TO 30
+C-------------FOR NWT
+            kk = LBOTM(k)
+            b1 = BOTM(J-1,I,kk)
+            h1 = HNEW(J-1,I,k)
+            IF ( h1.LT.b1 ) GOTO 30
 C
 C-------------CALCULATE FLOW THROUGH THIS FACE INTO THE ADJACENT CELL.
             hdiff = REAL( ( HNEW(j,i,k) - HNEW(j-1,i,k) ), 4 ) * rtotal
@@ -2991,6 +3062,12 @@ C-------------CALCULATE FLOW THROUGH THE RIGHT FACE.
    30       IF ( j.EQ.NCOL ) GO TO 60
             IF ( IBOUND(j+1,i,k).EQ.0 ) GO TO 60
             IF ( IBOUND(j+1,i,k).LT.0 .AND. ICHFLG.EQ.0 ) GO TO 60
+C-------------FOR NWT
+            kk = LBOTM(k)
+            b1 = BOTM(J+1,I,kk)
+            h1 = HNEW(J+1,I,k)
+            IF ( h1.LT.b1 ) GOTO 60
+C
             hdiff = REAL( ( HNEW(j,i,k) - HNEW(j+1,i,k) ), 4 ) * rtotal
             chch2 = ( hdiff * CR(j,i,k) ) + QREXTRACUM(j,i,k)
             IF( IBOUND(j+1,i,k).LT.0 ) GO TO 60
@@ -3008,6 +3085,12 @@ C-------------CALCULATE FLOW THROUGH THE BACK FACE.
    60       IF ( i.EQ.1 ) GO TO 90
             IF ( IBOUND(j,i-1,k).EQ.0 ) GO TO 90
             IF ( IBOUND(j,i-1,k).LT.0 .AND. ICHFLG.EQ.0 ) GO TO 90
+C-------------FOR NWT
+            kk = LBOTM(k)
+            b1 = BOTM(J,I-1,kk)
+            h1 = HNEW(J,I-1,k)
+            IF ( h1.LT.b1 ) GOTO 90
+C
             hdiff = REAL( ( HNEW(j,i,k) - HNEW(j,i-1,k) ), 4 ) * rtotal
             chch3 = ( hdiff * CC(j,i-1,k) ) - QFEXTRACUM(j,i-1,k)
             IF ( IBOUND(j,i-1,k).LT.0 ) GO TO 90
@@ -3025,6 +3108,12 @@ C-------------CALCULATE FLOW THROUGH THE FRONT FACE.
    90       IF ( i.EQ.NROW ) GO TO 120
             IF ( IBOUND(j,i+1,k).EQ.0 ) GO TO 120
             IF ( IBOUND(j,i+1,k).LT.0 .AND. ICHFLG.EQ.0 ) GO TO 120
+C-------------FOR NWT
+            kk = LBOTM(k)
+            b1 = BOTM(J,I+1,kk)
+            h1 = HNEW(J,I+1,k)
+            IF ( h1.LT.b1 ) GOTO 30
+C
             hdiff = REAL( ( HNEW(j,i,k) - HNEW(j,i+1,k) ), 4 ) * rtotal
             chch4 = ( hdiff * CC(j,i,k) ) + QFEXTRACUM(j,i,k)
             IF ( IBOUND(j,i+1,k).LT.0 ) GO TO 120
@@ -3042,6 +3131,12 @@ C-------------CALCULATE FLOW THROUGH THE UPPER FACE.
   120       IF ( k.EQ.1 ) GO TO 150
             IF ( IBOUND(j,i,k-1).EQ.0 ) GO TO 150
             IF ( IBOUND(j,i,k-1).LT.0 .AND. ICHFLG.EQ.0 ) GO TO 150
+C-------------FOR NWT
+            kk = LBOTM(k-1)
+            b1 = BOTM(J,I,kk)
+            h1 = HNEW(J,I,k-1)
+            IF ( h1.LT.b1 ) GOTO 150
+C
             hd = HNEW(j,i,k)
 C            IF( LC.NE.3 .AND. LC.NE.2 ) GO TO 122
 C            TMP=HD
@@ -3063,6 +3158,12 @@ C-------------CALCULATE FLOW THROUGH THE LOWER FACE.
   150       IF ( k.EQ.NLAY ) GO TO 180
             IF ( IBOUND(j,i,k+1).EQ.0 ) GO TO 180
             IF ( IBOUND(j,i,k+1).LT.0 .AND. ICHFLG.EQ.0 ) GO TO 180
+C-------------FOR NWT
+            kk = LBOTM(k+1)
+            b1 = BOTM(J,I,kk)
+            h1 = HNEW(J,I,k+1)
+            IF ( h1.LT.b1 ) GOTO 180
+C
             hd = HNEW(j,i,k+1)
 C            IF ( LAYCON(k+1).NE.3 .AND. LAYCON(k+1).NE.2 ) GO TO 152
 C            TMP=HD
@@ -3131,6 +3232,7 @@ C       + + + LOCAL DEFINITIONS + + +
         REAL :: nuontop, nubelbot
         REAL :: zclose, rclose
         REAL :: t
+        REAL :: bnwt, hnwt
 C
 C-------OUTPUT FORMAT STATEMENTS
  2000  FORMAT(1X,/1X,A,'   PERIOD ',I4,'   STEP ',I3)
@@ -3145,8 +3247,16 @@ C---------CALCULATE BRHS
             JBRHS: DO j=1,NCOL
 C---------------CALCULATE BOUNDARY FLUX
               IF ( IBOUND(J,I,K).GT.0 ) THEN
-                q = RHSFRESH(j,i,k) -
-     2              HNEW(j,i,k) * HCOF(j,i,k)
+C-----------------FOR NWT
+                kk = LBOTM(k)
+                bnwt = BOTM(J,I,kk)
+                hnwt = HNEW(J,I,K)
+                IF ( hnwt.LT.bnwt ) THEN
+                  q = 0.0
+                ELSE
+                  q = RHSFRESH(j,i,k) -
+     2                HNEW(j,i,k) * HCOF(j,i,k)
+                END IF
               ELSE
                 q = -BUFF(j,i,k)
               END IF
@@ -3640,15 +3750,17 @@ C--------SET FLAG FOR LOCATION OF THE ZETA SURFACE RELATIVE
 C        TO THE TOP AND BOTTOM OF A CELL
 C        IPLPOS=1 AT TOP, IPLPOS=2 AT BOTTOM, IPLPOS=0 IN BETWEEN
        SUBROUTINE SSWI_SET_IPLPOS()
-        USE GLOBAL,       ONLY: NCOL,NROW,NLAY
+        USE GLOBAL,       ONLY: NCOL,NROW,NLAY,LBOTM,BOTM,HNEW
         USE GWFSWIMODULE
         IMPLICIT NONE
 C     + + + DUMMY ARGUMENTS + + +
 C     + + + LOCAL DEFINITIONS + + +
         INTEGER :: i, j, k, iz
+        INTEGER :: kk
 C     + + + FUNCTIONS + + +
 C     + + + CODE + + +
         K_IPLPOS: DO k=1,NLAY
+          kk = LBOTM(k)
           I_IPLPOS: DO i=1,NROW
             J_IPLPOS: DO j=1,NCOL
               IPLPOS(j,i,k,1) = 0
@@ -3656,6 +3768,9 @@ C     + + + CODE + + +
                 IF (ZETA(j,i,k,iz).GE.ZETA(j,i,k,1)) THEN
                   IPLPOS(j,i,k,iz) = 1
                 ELSEIF (ZETA(j,i,k,iz).LE.ZETA(j,i,k,NZONES+1)) THEN
+                  IPLPOS(j,i,k,iz) = 2
+C-----------------NWT
+                ELSE IF (HNEW(j,i,k).LT.BOTM(j,i,kk)) THEN
                   IPLPOS(j,i,k,iz) = 2
                 ELSE
                   IPLPOS(j,i,k,iz) = 0
