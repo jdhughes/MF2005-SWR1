@@ -10018,9 +10018,13 @@ C-----------CALCULATE DYNAMIC CONDUCTANCE
               CASE (2)
                 cond = twp * length * hcond / gcndln
               CASE (3)
-                cond = (gcndln / (twp * length * hcond)) +
-     2                 (DONE / (twp * length * Rch%GLK))
-                cond = DONE / cond
+                IF ( twp.GT.DZERO ) THEN
+                  cond = (gcndln / (twp * length * hcond)) +
+     2                   (DONE / (twp * length * Rch%GLK))
+                  cond = DONE / cond
+                ELSE
+                  cond = DZERO
+                END IF
             END SELECT
 C-----------USER SPECIFIED CONDUCTANCE
           ELSE
