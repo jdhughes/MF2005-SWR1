@@ -2995,7 +2995,11 @@ c   set thickness / conductance to 0 if cell is dry
            END IF
          end if
          IF(ITRSS.NE.0) THEN
-           SS=SC1(IX,IY,IZ)/(thick*dx*dy)
+           IF (thick.GT.0.0) THEN
+             SS=SC1(IX,IY,IZ)/(thick*dx*dy)
+           ELSE
+             SS=0.0
+           END IF
          ELSE
            SS=1e-5  
          END IF
