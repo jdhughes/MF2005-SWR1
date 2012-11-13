@@ -465,6 +465,7 @@ C         SWR VARIABLES
         INTEGER,SAVE,POINTER          :: SWRHEADER
         INTEGER,SAVE,POINTER          :: NRCHGRP
         INTEGER,SAVE,POINTER          :: NSOLRG
+        INTEGER,SAVE,POINTER          :: NACTIVE
         INTEGER,SAVE,POINTER          :: ISWRSS
         INTEGER,SAVE,POINTER          :: ISWRDT
         DOUBLEPRECISION,SAVE,POINTER  :: SWRDT
@@ -595,6 +596,7 @@ C         SWR VARIABLES
           INTEGER,POINTER          :: SWRHEADER
           INTEGER,POINTER          :: NRCHGRP
           INTEGER,POINTER          :: NSOLRG
+          INTEGER,POINTER          :: NACTIVE
           INTEGER,POINTER          :: ISWRSS
           INTEGER,POINTER          :: ISWRDT
           DOUBLEPRECISION,POINTER  :: SWRDT
@@ -1462,13 +1464,14 @@ C       TIME STEP
 C
 C-------ALLOCATE SPACE FOR DATA OF KNOWN SIZE
       ALLOCATE(REACH(NREACHES))
-      ALLOCATE(NRCHGRP,NSOLRG)
+      ALLOCATE(NRCHGRP,NSOLRG,NACTIVE)
       ALLOCATE(JAC)
       ALLOCATE(SWRHEADER)
       ALLOCATE(ISWRSS,ISWRDT,SWRDT,KMFITER)
       ALLOCATE(SWRHEPS)
       NRCHGRP   = IZERO
       NSOLRG    = IZERO
+      NACTIVE   = IZERO
       SWRHEADER = IZERO
       ISWRDT    = IZERO
       ISWRSS    = IZERO
@@ -2224,13 +2227,17 @@ C           ACTIVE REACHES
           END IF
         END DO
 C---------WRITE SUMMARY OF BOUNDARIES FOR EACH REACH GROUP
+C         AND COUNT THE NUMBER OF ACTIVE REACH GROUPS
         ibndfail = 0
+        NACTIVE  = 0
         WRITE (IOUT,'(//2X,A,/1X,4(A10,1X),/1X,4(10("-"),1X))') 
      2    'SUMMARY OF SWR REACH BOUNDARY CONDITIONS',
      3    '       IRG','  INACTIVE','  CONSTANT','    ACTIVE'
         DO n = 1, NRCHGRP
           WRITE (IOUT,'(1X,4(I10,1X))') 
      2      n, iinactive(n), iconstant(n), iactive(n)
+C           INCREMENT THE NUMBER OF ACTIVE REACH GROUPS
+          IF ( iactive(n).GT.0 ) NACTIVE = NACTIVE + 1
 C           INACTIVE AND ACTIVE REACHES IN REACH GROUP - ERROR CONDITION
           IF ( iinactive(n).GT.IZERO .AND. iactive(n).GT.IZERO ) THEN
             ibndfail = 1
@@ -5331,6 +5338,7 @@ C         SWR1 VARIABLES
         DEALLOCATE(GWFSWRDAT(Igrid)%SWRHEADER)
         DEALLOCATE(GWFSWRDAT(Igrid)%NRCHGRP)
         DEALLOCATE(GWFSWRDAT(Igrid)%NSOLRG)
+        DEALLOCATE(GWFSWRDAT(Igrid)%NACTIVE)
         DEALLOCATE(GWFSWRDAT(Igrid)%ISWRSS)
         DEALLOCATE(GWFSWRDAT(Igrid)%ISWRDT)
         DEALLOCATE(GWFSWRDAT(Igrid)%SWRDT)
@@ -5478,6 +5486,7 @@ C         SWR1 VARIABLES
         SWRHEADER=>GWFSWRDAT(Igrid)%SWRHEADER
         NRCHGRP=>GWFSWRDAT(Igrid)%NRCHGRP
         NSOLRG=>GWFSWRDAT(Igrid)%NSOLRG
+        NACTIVE=>GWFSWRDAT(Igrid)%NACTIVE
         ISWRSS=>GWFSWRDAT(Igrid)%ISWRSS
         ISWRDT=>GWFSWRDAT(Igrid)%ISWRDT
         SWRDT=>GWFSWRDAT(Igrid)%SWRDT
@@ -5626,6 +5635,7 @@ C         SWR1 VARIABLES
         GWFSWRDAT(Igrid)%SWRHEADER=>SWRHEADER
         GWFSWRDAT(Igrid)%NRCHGRP=>NRCHGRP
         GWFSWRDAT(Igrid)%NSOLRG=>NSOLRG
+        GWFSWRDAT(Igrid)%NACTIVE=>NACTIVE
         GWFSWRDAT(Igrid)%ISWRSS=>ISWRSS
         GWFSWRDAT(Igrid)%ISWRDT=>ISWRDT
         GWFSWRDAT(Igrid)%SWRDT=>SWRDT
@@ -6256,7 +6266,7 @@ C-------ALLOCATE MEMORY FOR RCHGRP DATA
      2                             IPC, NLEVELS, IPTFLG, 
      3                             NREACHES, REACH, 
      4                             IRDBND, ISOLVER, NINNER, 
-     5                             NRCHGRP, NSOLRG, RCHGRP, JAC
+     5                             NRCHGRP, NSOLRG, NACTIVE, RCHGRP, JAC
         USE GWFSWRINTERFACE, ONLY: SSWR_SORT
         IMPLICIT NONE
 C     + + + DUMMY ARGUMENTS + + +
@@ -6722,8 +6732,10 @@ C-----------DETERMINE STORAGE NEEDS FOR ITERATIVE SOLVE PRECONDITIONERS
               CASE ( 4 )
                 JAC%NRLU  = isolrg
                 iwk       = isolrg + innz * 3 + 1
-                CALL ilutsize(isolrg,JAC%NNZ,JAC%JA,JAC%IA,
-     2                        NLEVELS,iwk)
+                IF ( NACTIVE.GT.0 ) THEN
+                  CALL ilutsize(isolrg,JAC%NNZ,JAC%JA,JAC%IA,
+     2                          NLEVELS,iwk)
+                END IF
                 JAC%NNZLU = iwk
                 ijlu      = JAC%NNZLU
                 ijw       = 2*JAC%NRLU
@@ -7615,6 +7627,7 @@ C     + + + CODE + + +
         Iouter = 0
         e = SQRT( EPSILON( DZERO ) )
         IF ( NSOLRG.LT.1 ) RETURN
+        IF ( NACTIVE.LT.1 ) RETURN
         DO n = 1, NSOLRG
           JAC%DX(n) = DONE
         END DO
