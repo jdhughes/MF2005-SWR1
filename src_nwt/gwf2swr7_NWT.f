@@ -90,6 +90,7 @@ C---------STRUCTURE DATA TYPE
           DOUBLEPRECISION :: STRWID          = DZERO
           DOUBLEPRECISION :: STRWID2         = DZERO
           DOUBLEPRECISION :: STRLEN          = DZERO
+          DOUBLEPRECISION :: STRLEN2         = DZERO
           DOUBLEPRECISION :: STRMAN          = DZERO
           INTEGER         :: ISTRDIR         = IZERO
           DOUBLEPRECISION :: STRVAL          = DZERO
@@ -2777,6 +2778,23 @@ C                 CRITICAL-DEPTH BOUNDARY CONDITION
                 REACH(istrrch)%STRUCT(istrnum)%STRINV = 
      2            REACH(istrrch)%GEO%ELEV(1) + SMALL
               END IF
+C               TEST USE OF STRLEN AND STRLEN2 FOR UNCONTROLLED FLOW STRUCTURES - JDH 11/28/2012
+              CALL URWORD(line,lloc,istart,istop,3,ival,r,-IOUT,iut)
+              IF ( r.LE.RZERO ) THEN
+                REACH(istrrch)%STRUCT(istrnum)%STRLEN = 
+     2            REACH(istrrch)%DLEN
+              ELSE
+                REACH(istrrch)%STRUCT(istrnum)%STRLEN = SSWR_R2D(r)
+              END IF
+              IF ( istrconn.GT.0 ) THEN
+                CALL URWORD(line,lloc,istart,istop,3,ival,r,-IOUT,iut)
+                IF ( r.LE.RZERO ) THEN
+                  REACH(istrrch)%STRUCT(istrnum)%STRLEN2 = 
+     2              REACH(istrconn)%DLEN
+                ELSE
+                  REACH(istrrch)%STRUCT(istrnum)%STRLEN2 = SSWR_R2D(r)
+                END IF
+              END IF
 C             SPECIFIED DISCHARGE
             CASE (3)
               CALL URWORD(line,lloc,istart,istop,3,ival,r,IOUT,iut)
@@ -3086,6 +3104,9 @@ C                 UNCONTROLLED FLOW
                   ELSE
                     cstruct(11) = 'UNKN. CON.'
                   END IF
+C                 TEST USE OF STRLEN AND STRLEN2 FOR UNCONTROLLED FLOW STRUCTURES - JDH 11/28/2012 - JDH 11/28/2012                  
+                  WRITE (cstruct( 8),2110) REACH(i)%STRUCT(j)%STRLEN + 
+     2                                     REACH(i)%STRUCT(j)%STRLEN2
 C                 SPECIFIED DISCHARGE
                 CASE (3)
                   WRITE (cstruct(10),2110) REACH(i)%STRUCT(j)%STRVAL
@@ -11275,7 +11296,7 @@ C             NOT DIFFUSIVE WAVE REACH - SKIP
             IF ( REACH(i)%CROUTETYPE.NE.'DW' ) CYCLE EACHRCHCONN
 C             UNCONTROLLED FLOW ONLY FOR DIFFUSIVE-WAVE APPROXIMATION CONNECTION
             q = SSWR_CALC_UFLOW(i,j,irowi,jcoli,irowj,jcolj,
-     2                          irgi,irgj,si,sj,
+     2                          irgi,irgj,si,sj,DZERO,DZERO,
      3                          Gs)
           END IF
 C           POSITIVE FLOW - INFLOW TO REACH
@@ -11470,7 +11491,7 @@ C---------RETURN
       DOUBLEPRECISION FUNCTION SSWR_CALC_UFLOW(I,J,
      2                                         Irowi,Jcoli,Irowj,Jcolj,
      3                                         Icei,Icej,
-     4                                         Si,Sj,
+     4                                         Si,Sj,Sleni,Slenj,
      5                                         Gs)  RESULT(value)
         USE GLOBAL,       ONLY: DELR, DELC
         USE GWFSWRMODULE
@@ -11482,6 +11503,7 @@ C     + + + DUMMY ARGUMENTS + + +
         INTEGER, INTENT(IN) :: Jcoli, Jcolj
         INTEGER, INTENT(IN) :: Icei, Icej
         DOUBLEPRECISION, INTENT(IN) :: Si, Sj
+        DOUBLEPRECISION, INTENT(IN) :: Sleni, Slenj
         DOUBLEPRECISION, DIMENSION(NRCHGRP), INTENT(IN) :: Gs
 C     + + + LOCAL DEFINITIONS + + +
         DOUBLEPRECISION :: e, t, c
@@ -11526,7 +11548,8 @@ C     + + + CODE + + +
           IF (Icei.GT.IZERO) THEN
             dli = RCHGRP(Icei)%DLEN * DONEHALF
           ELSE
-            dli = REACH(I)%DLEN * DONEHALF
+C            dli = REACH(I)%DLEN * DONEHALF
+            dli = Sleni * DONEHALF
           END IF
         END IF
         IF (J.GT.IZERO) THEN
@@ -11537,7 +11560,8 @@ C     + + + CODE + + +
             IF (Icei.GT.IZERO) THEN
               dlj = RCHGRP(Icej)%DLEN * DONEHALF
             ELSE
-              dlj = REACH(J)%DLEN * DONEHALF
+C              dlj = REACH(J)%DLEN * DONEHALF
+              dlj = Slenj * DONEHALF
             END IF
           END IF
         END IF
@@ -12510,6 +12534,7 @@ C     + + + LOCAL DEFINITIONS + + +
         INTEGER :: jcoli, jcolj
         DOUBLEPRECISION :: rbot
         DOUBLEPRECISION :: stage, dstage
+        DOUBLEPRECISION :: strlen, strlen2
         DOUBLEPRECISION :: v, vt, dv
         DOUBLEPRECISION :: q
         DOUBLEPRECISION :: fact
@@ -12571,6 +12596,8 @@ C             FREE CONNECTION
           CASE (2)
             irowi   = REACH(Irch)%IRCH
             jcoli   = REACH(Irch)%JRCH
+            strlen  = Str%STRLEN
+            strlen2 = Str%STRLEN2
             IF ( Idsrch.GT.IZERO ) THEN
               irowj   = REACH(idsrch)%IRCH
               jcolj   = REACH(idsrch)%JRCH
@@ -12599,7 +12626,7 @@ C                   CRITICAL DEPTH BOUNDARY
 C               RETURNED VALUE IS RELATIVE TO REACH
             q = SSWR_CALC_UFLOW(Irch,idsrch,
      2                          irowi,jcoli,irowj,jcolj,
-     3                          -irchrg,0,stage,dstage,
+     3                          -irchrg,0,stage,dstage,strlen,strlen2,
      4                          P)
 C               NOTE: SIGN CONVENTION OF q FROM SSWR_CALC_UFLOW IS OPPOSITE
 C                     FROM OTHER STRUCTURE FLOWS - +VE = OUTFLOW, -VE = INFLOW
