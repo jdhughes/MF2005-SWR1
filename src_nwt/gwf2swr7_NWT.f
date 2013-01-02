@@ -13348,7 +13348,7 @@ C---------RETURN
      4                          RSTAGE
         IMPLICIT NONE
 C       + + + DUMMY ARGUMENTS + + +
-        TYPE (TREACH), INTENT(IN) :: Rch
+        TYPE (TREACH), INTENT(INOUT) :: Rch
 C       + + + LOCAL DEFINITIONS + + +
         LOGICAL :: rhsonly
         INTEGER :: n, kl, kk
