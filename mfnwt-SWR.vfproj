@@ -48,10 +48,10 @@
 		<Filter Name="Header Files" Filter="fi;fd"/>
 		<Filter Name="Resource Files" Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"/>
 		<Filter Name="Source Files" Filter="f90;for;f;fpp;ftn;def;odl;idl">
-		<File RelativePath=".\src_nwt\de47.f"/>
+		<File RelativePath=".\src_nwt\de47_NWT.f"/>
 		<File RelativePath=".\src_nwt\gmg7.f"/>
-		<File RelativePath=".\src_fmp\gsol7.f"/>
-		<File RelativePath=".\src_nwt\gwf2bas7.f"/>
+		<File RelativePath=".\src_nwt\gsol7.f"/>
+		<File RelativePath=".\src_nwt\gwf2bas7_NWT.f"/>
 		<File RelativePath=".\src_nwt\gwf2bcf7.f"/>
 		<File RelativePath=".\src_nwt\gwf2chd7.f"/>
 		<File RelativePath=".\src_nwt\gwf2drn7_NWT.f"/>
@@ -102,8 +102,9 @@
 		<File RelativePath=".\src_nwt\obs2drn7.f"/>
 		<File RelativePath=".\src_nwt\obs2ghb7.f"/>
 		<File RelativePath=".\src_nwt\obs2riv7.f"/>
+		<File RelativePath=".\src_nwt\obs2str7.f"/>
 		<File RelativePath=".\src_nwt\parutl7.f"/>
-		<File RelativePath=".\src_nwt\pcg7.f"/>
-		<File RelativePath=".\src_nwt\sip7.f"/>
+		<File RelativePath=".\src_nwt\pcg7_NWT.f"/>
+		<File RelativePath=".\src_nwt\sip7_NWT.f"/>
 		<File RelativePath=".\src_nwt\utl7.f"/></Filter></Files>
 	<Globals/></VisualStudioProject>

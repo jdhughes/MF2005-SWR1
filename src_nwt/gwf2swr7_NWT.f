@@ -1347,8 +1347,8 @@ C-------DETERMINE NTMAX
       totim  = RZERO
       RTOTIM = RZERO
       ierr   = 0
-!      IF ( RTMIN.GT.RZERO ) THEN
-      IF ( IADTIME.EQ.1 ) THEN
+      IF ( RTMIN.GT.RZERO ) THEN
+!      IF ( IADTIME.EQ.1 ) THEN
         DO n = 1, NPER
           DO i = 1, NSTP(n)
             CALL SSWR_GET_MODFLOW_TIME(n,i,rt,RTOTIM)

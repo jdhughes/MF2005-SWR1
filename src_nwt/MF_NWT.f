@@ -1,7 +1,7 @@
 C     ******************************************************************
 C     MAIN CODE FOR U.S. GEOLOGICAL SURVEY MODULAR MODEL -- MODFLOW-NWT
 !rgn------REVISION NUMBER CHANGED TO BE CONSISTENT WITH NWT RELEASE
-!rgn------NEW VERSION NUMBER 1.0.5:  April 5, 2012
+!rgn------NEW VERSION NUMBER 1.0.6:  December 5, 2012
 C     ******************************************************************
 C
 C        SPECIFICATIONS:
@@ -24,27 +24,27 @@ C1------USE package modules.
 C
 C-------ASSIGN VERSION NUMBER AND DATE
       CHARACTER*40 VERSION,VERSION2,VERSION3
-      CHARACTER*15 MFVNAM
-      PARAMETER (VERSION='1.0.5 05/14/2012')
+      CHARACTER*10 MFVNAM
+      PARAMETER (VERSION='1.0.6 12/05/2012')
       PARAMETER (VERSION2='1.8.00 12/18/2009')
-      PARAMETER (VERSION3='1.01.0 09/10/2012')
-      PARAMETER (MFVNAM='-NWT-SWR1-SWI2')
+      PARAMETER (VERSION3='0.56.0 05/18/2012')
+      PARAMETER (MFVNAM='-NWT-SWR1')
 C
       CHARACTER*80 HEADNG(2)
       CHARACTER*200 FNAME
       INTEGER IBDT(8)
 C
       CHARACTER*4 CUNIT(NIUNIT)
-      DATA CUNIT/'BCF6', 'WEL ', 'DRN ', 'RIV ', 'EVT ', '    ', 'GHB ',  !  7
+      DATA CUNIT/'BCF6', 'WEL ', 'DRN ', 'RIV ', 'EVT ', 'gfd ', 'GHB ',  !  7
      &           'RCH ', 'SIP ', 'DE4 ', '    ', 'OC  ', 'PCG ', 'lmg ',  ! 14
      &           'gwt ', 'FHB ', 'RES ', 'STR ', 'IBS ', 'CHD ', 'HFB6',  ! 21
      &           'LAK ', 'LPF ', 'DIS ', '    ', 'PVAL', '    ', 'HOB ',  ! 28
      &           '    ', '    ', 'ZONE', 'MULT', 'DROB', 'RVOB', 'GBOB',  ! 35
-     &           '    ', 'HUF2', 'CHOB', 'ETS ', 'DRT ', '    ', 'GMG ',  ! 42
+     &           'STOB', 'HUF2', 'CHOB', 'ETS ', 'DRT ', '    ', 'GMG ',  ! 42
      &           'HYD ', 'SFR ', '    ', 'GAGE', 'LVDA', '    ', 'LMT6',  ! 49
      &           'MNW2', 'MNWI', 'MNW1', 'KDEP', 'SUB ', 'UZF ', 'gwm ',  ! 56
-     &           'SWT ', 'cfp ', 'PCGN', '    ', 'FMP ', 'UPW ', 'NWT ',  ! 63
-     &           'SWR ', 'SWI ', 'XXX ', '    ', '    ', '    ', '    ',  ! 70     - SWR - SWI - JDH 
+     &           'SWT ', 'cfp ', 'pcgn', '    ', 'FMP ', 'UPW ', 'NWT ',  ! 63
+     &           'SWR ', 'SWI ', 'XXX ', '    ', '    ', '    ', '    ',  ! 70     - SWR - JDH 
      &           30*'    '/                                               ! 71-100 - SWR - JDH
 C     ------------------------------------------------------------------
 C
@@ -53,9 +53,10 @@ C2------WRITE BANNER TO SCREEN AND DEFINE CONSTANTS.
     1 FORMAT (/,34X,'MODFLOW',A,/,
      &4X,'U.S. GEOLOGICAL SURVEY MODULAR FINITE-DIFFERENCE',
      &' GROUNDWATER-FLOW MODEL',/,29X,'WITH NEWTON FORMULATION',
-     &  /,29X,'Version ',A/,20X,'BASED ON MODFLOW-2005 Version ',A,
-     &  /,20X,'SWR1-SWI2 Version ',A/)
+     &  /,29X,'Version ',A/,20X,'BASED ON MODFLOW-2005 Version ',A/,
+     &  /,20X,'SWR1 Version ',A/)
       INUNIT = 99
+      NCVGERR=0
 C
 C3------GET THE NAME OF THE NAME FILE
       CALL GETNAMFIL(FNAME)
@@ -124,6 +125,7 @@ C6------ALLOCATE AND READ (AR) PROCEDURE
       IF(IUNIT(9).GT.0) CALL SIP7AR(IUNIT(9),MXITER,IGRID)
       IF(IUNIT(10).GT.0) CALL DE47AR(IUNIT(10),MXITER,IGRID)
       IF(IUNIT(13).GT.0) CALL PCG7AR(IUNIT(13),MXITER,IGRID)
+c      IF(IUNIT(14).GT.0) CALL LMG7AR(IUNIT(14),MXITER,IGRID)
       IF(IUNIT(42).GT.0) CALL GMG7AR(IUNIT(42),MXITER,IGRID)
 !      IF(IUNIT(59).GT.0) CALL PCGN2AR(IUNIT(59),IFREFM,MXITER,IGRID)
       IF(IUNIT(50).GT.0) CALL GWF2MNW27AR(IUNIT(50),IGRID)
@@ -147,6 +149,7 @@ C6------ALLOCATE AND READ (AR) PROCEDURE
      1                   CALL GWF2HYD7STR7AR(IUNIT(43),IGRID)
       IF(IUNIT(43).GT.0 .AND. IUNIT(44).GT.0)
      1                   CALL GWF2HYD7SFR7AR(IUNIT(43),IGRID)
+      IF(IUNIT(49).GT.0) CALL LMT7BAS7AR(INUNIT,CUNIT,IGRID)
 !      IF(IUNIT(61).GT.0) THEN
 !        CALL FMP2AR(
 !     1  IUNIT(61),IUNIT(44),IUNIT(52),IUNIT(55),IGRID)                  !FMP2AR CALL ADDED BY SCHMID
@@ -158,6 +161,7 @@ C  Observation allocate and read
       IF(IUNIT(33).GT.0) CALL OBS2DRN7AR(IUNIT(33),IUNIT(3),IGRID)
       IF(IUNIT(34).GT.0) CALL OBS2RIV7AR(IUNIT(34),IUNIT(4),IGRID)
       IF(IUNIT(35).GT.0) CALL OBS2GHB7AR(IUNIT(35),IUNIT(7),IGRID)
+      IF(IUNIT(36).GT.0) CALL OBS2STR7AR(IUNIT(36),IUNIT(18),IGRID)
       IF(IUNIT(38).GT.0) CALL OBS2CHD7AR(IUNIT(38),IGRID)
 ! Modify conductance for HFB when using UPW.
       IF ( IUNIT(62).GT.0 ) THEN
@@ -238,8 +242,7 @@ C7C1----CALCULATE TIME STEP LENGTH. SET HOLD=HNEW.
           IF(IUNIT(22).GT.0) CALL GWF2LAK7AD(KKPER,KKSTP,IUNIT(15),
      1                                           IGRID)
           IF(IUNIT(65).GT.0) CALL GWF2SWI1AD(KKSTP,KKPER,IGRID)  !SWI
-          IF( IUNIT(44).GT.0 .AND. NUMTAB.GT.0 ) 
-     2                             CALL GWF2SFR7AD(IUNIT(22))
+          IF( IUNIT(44).GT.0 ) CALL GWF2SFR7AD(IUNIT(22))  !rgn 6/12/12
           IF(IUNIT(50).GT.0) THEN
             IF (IUNIT(1).GT.0) THEN
               CALL GWF2MNW27BCF(KPER,IGRID)
@@ -348,9 +351,8 @@ C7C2A---FORMULATE THE FINITE DIFFERENCE EQUATIONS.
 !            IF(IUNIT(61).GT.0) CALL FMP2FM(KKITER,KKPER,KKSTP,ISTARTFL, !FMP2FM CALL ADDED BY SCHMID
 !     1                              IUNIT(44),IUNIT(52),IUNIT(55),IGRID)
             IF(IUNIT(55).GT.0) CALL GWF2UZF1FM(KKPER,KKSTP,KKITER,
-     1                           IUNIT(44),IUNIT(22),IUNIT(58),
-     2                           IUNIT(63),
-     3                           IUNIT(64),IGRID)  !SWR - JDH ADDED IUNIT(64)
+     1                           IUNIT(44),IUNIT(22),IUNIT(63),
+     2                           IUNIT(64),IGRID)  !SWR - JDH ADDED IUNIT(64)
             IF(IUNIT(44).GT.0) CALL GWF2SFR7FM(KKITER,KKPER,KKSTP,
      1                              IUNIT(22),IUNIT(63),IUNIT(8), 
      2                              IUNIT(55),IGRID)   !cjm (added IUNIT(8))
@@ -558,7 +560,7 @@ CLMT
 CLMT----CALL LINK-MT3DMS SUBROUTINES TO SAVE FLOW-TRANSPORT LINK FILE
 CLMT----FOR USE BY MT3DMS FOR TRANSPORT SIMULATION
 CLMT
-          INCLUDE 'lmt7_NWT.inc'
+          IF(IUNIT(49).GT.0) CALL LMT7BD(KKSTP,KKPER,IGRID)
 CLMT                              
 C
 C
@@ -569,6 +571,7 @@ C  Observation simulated equivalents
           IF(IUNIT(33).GT.0) CALL OBS2DRN7SE(IGRID)
           IF(IUNIT(34).GT.0) CALL OBS2RIV7SE(IGRID)
           IF(IUNIT(35).GT.0) CALL OBS2GHB7SE(IGRID)
+          IF(IUNIT(36).GT.0) CALL OBS2STR7SE(IGRID)
           IF(IUNIT(38).GT.0) CALL OBS2CHD7SE(KKPER,IGRID)
           IF(IUNIT(43).GT.0) CALL GWF2HYD7BAS7SE(1,IGRID)
           IF(IUNIT(43).GT.0 .AND. IUNIT(19).GT.0)
@@ -581,7 +584,7 @@ C  Observation simulated equivalents
      1                              CALL GWF2HYD7SFR7SE(1,IGRID)
 C
 C7C5---PRINT AND/OR SAVE DATA.
-          CALL GWF2BAS7OT(KKSTP,KKPER,ICNVG,1,IGRID)
+          CALL GWF2BAS7OT(KKSTP,KKPER,ICNVG,1,IGRID,BUDPERC)
           IF(IUNIT(19).GT.0) CALL GWF2IBS7OT(KKSTP,KKPER,IUNIT(19),
      1                                       IGRID)
           IF(IUNIT(37).GT.0)THEN
@@ -601,9 +604,20 @@ C7C6---JUMP TO END OF PROGRAM IF CONVERGENCE WAS NOT ACHIEVED.
               IF(ICNVG.EQ.0) GO TO 110
             END IF
           ELSE
-            IF(ICNVG.EQ.0) GO TO 110
+            IF(ICNVG.EQ.0) THEN
+              NCVGERR=NCVGERR+1
+              WRITE(IOUT,87) BUDPERC
+   87         FORMAT(1X,'FAILURE TO MEET SOLVER CONVERGENCE CRITERIA',/
+     1       1X,'BUDGET PERCENT DISCREPANCY IS',F10.4)
+              IF(ABS(BUDPERC).GT.STOPER) THEN
+                WRITE(IOUT,*) 'STOPPING SIMULATION'
+                GO TO 110
+              ELSE
+                WRITE(IOUT,*) 'CONTINUING EXECUTION'
+              END IF
+            END IF
           END IF
-          END IF
+        END IF
 C
 C-----END OF TIME STEP (KSTP) AND STRESS PERIOD (KPER) LOOPS
    90   CONTINUE
@@ -621,6 +635,7 @@ C  Observation output
       IF(IUNIT(33).GT.0) CALL OBS2DRN7OT(IGRID)
       IF(IUNIT(34).GT.0) CALL OBS2RIV7OT(IGRID)
       IF(IUNIT(35).GT.0) CALL OBS2GHB7OT(IGRID)
+      IF(IUNIT(36).GT.0) CALL OBS2STR7OT(IGRID)
       IF(IUNIT(38).GT.0) CALL OBS2CHD7OT(IGRID)
       CALL GLO1BAS6ET(IOUT,IBDT,1)
 C
@@ -681,14 +696,17 @@ C9------LAST BECAUSE IT DEALLOCATES IUNIT.
       IF(IUNIT(33).GT.0) CALL OBS2DRN7DA(IGRID)
       IF(IUNIT(34).GT.0) CALL OBS2RIV7DA(IGRID)
       IF(IUNIT(35).GT.0) CALL OBS2GHB7DA(IGRID)
+      IF(IUNIT(36).GT.0) CALL OBS2STR7DA(IGRID)
       IF(IUNIT(38).GT.0) CALL OBS2CHD7DA(IGRID)
       IF(IUNIT(43).GT.0) CALL GWF2HYD7DA(IGRID)
+      IF(IUNIT(49).GT.0) CALL LMT7DA(IGRID)
 !      IF(IUNIT(61).GT.0) CALL FMP2DA(IGRID)
       CALL GWF2BAS7DA(IGRID)
 C
 C10-----END OF PROGRAM.
-      IF(ICNVG.EQ.0) THEN
-        WRITE(*,*) 'FAILED TO MEET SOLVER CONVERGENCE CRITERIA'
+      IF(NCVGERR.GT.0) THEN
+        WRITE(*,*) 'FAILED TO MEET SOLVER CONVERGENCE CRITERIA ',
+     1          NCVGERR,' TIME(S)'
       ELSE
         WRITE(*,*) ' Normal termination of simulation'
       END IF

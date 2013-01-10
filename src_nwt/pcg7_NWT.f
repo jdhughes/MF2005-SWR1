@@ -186,8 +186,9 @@ C
 C        SPECIFICATIONS:
 C     ------------------------------------------------------------------
       REAL BIGH, BIGR, BPOLY, C0, C1, C2, CC, CD, CD1, CR, CV, DAMP, 
-     &     HCHG, HCLOSE, HCOF, RCHG, RCLOSE, RELAX, RHS, T,
+     &     HCHG, HCLOSE, RCHG, RCLOSE, RELAX, T,
      &     DAMPSS, DAMPTR,HDRY
+      DOUBLE PRECISION RHS, HCOF
       INTEGER I, IBOUND, IC, ICNVG, IH, II, IICNVG, IITER, IL, IOUT,
      &        IPRPCG, IR, IT1, ITER1, J, JH, JJ, JR, K, KH, KITER, 
      &        KK, KPER, KR, KSTP, LHCH, LRCH, MUTPCG, MXITER, N, NBPOL, 

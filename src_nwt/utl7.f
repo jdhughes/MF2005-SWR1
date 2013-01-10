@@ -835,10 +835,10 @@ C4C-----LOCAT<0; READ UNFORMATTED ARRAY VALUES.
   203      FORMAT(1X,///1X,A,' FOR CROSS SECTION',/
      1      1X,'READING BINARY ON UNIT ',I4)
         END IF
+        !READ(LOCAT) KSTP,KPER,PERTIM,TOTIM,TEXT,NCOL,NROW,ILAY
         IF (ICLOSE.NE.1) THEN !JDH
           READ(LOCAT) KSTP,KPER,PERTIM,TOTIM,TEXT,NCOL,NROW,ILAY
         END IF !JDH
-!        READ(LOCAT) KSTP,KPER,PERTIM,TOTIM,TEXT,NCOL,NROW,ILAY
         READ(LOCAT) A
       END IF
 C
@@ -1334,7 +1334,6 @@ C
 C        SPECIFICATIONS:
 C     ------------------------------------------------------------------
       CHARACTER*16 TEXT
-      REAL BUF
       DIMENSION BUF(NCOL,NROW)
 C     ------------------------------------------------------------------
 C

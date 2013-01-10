@@ -1492,7 +1492,7 @@ C     STORE L-PART
 C 
          DO k = 1, len 
             !IF ( ju0.GT.iwk ) GOTO 996
-            IF ( ju0.GT.iwk ) THEN
+            IF ( ju0.GT.iwk) THEN
               CALL EXPANDILUT( IWK, ju0, jlu, alu )
             END IF
             alu(ju0) = w(k)
@@ -1521,7 +1521,7 @@ C     COPY
 C 
          t = ABS( w(ii) )
 !         IF ( len + ju0.GT.IWK ) GOTO 997
-         IF ( len + ju0.GT.IWK ) THEN
+         IF ( len + ju0.GT.IWK) THEN
            CALL EXPANDILUT( IWK, (len + ju0), jlu, alu )
          END IF
          DO k = ii+1, ii+len-1 
@@ -1533,7 +1533,7 @@ C
 C     
 C     STORE INVERSE OF DIAGONAL ELEMENT OF U
 C     
-         IF ( w(ii).EQ.0.0D0 ) w(ii) = (0.0001 + droptol)*tnorm
+         IF ( w(ii).EQ.0.0D0) w(ii) = (0.0001 + droptol)*tnorm
 C     
          alu(ii) = 1.0D0 / w(ii) 
 C     
